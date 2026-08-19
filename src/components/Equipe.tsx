@@ -32,7 +32,7 @@ function Cartao({
   ano: string;
 }) {
   return (
-    <div className="w-[78vw] max-w-[300px] shrink-0 sm:w-[44vw] md:w-[min(34vw,460px,calc(78vh*0.75))] md:max-w-none">
+    <div className="w-[78vw] max-w-[300px] shrink-0 sm:w-[44vw] md:w-[min(calc((100vw-3rem)/2.4),calc(80vh*0.75))] md:max-w-none">
       <Marcador proporcao="3/4" rotulo="foto" />
       <p className="mt-4 text-lg font-medium sm:text-xl">{nome}</p>
       <p className="mt-1 font-mono text-xs text-tinta-3">
@@ -47,6 +47,7 @@ export function Equipe() {
   const trilhoRef = useRef<HTMLDivElement>(null);
   const cabecalhoRef = useRef<HTMLDivElement>(null);
   const [altura, setAltura] = useState<number | undefined>(undefined);
+  const [preso, setPreso] = useState(true);
   const reduzido = usarMovimentoReduzido();
 
   /**
@@ -84,6 +85,18 @@ export function Equipe() {
       // o último cartão para exatamente à mesma distância da borda que o
       // primeiro começou.
       distancia = Math.max(trilho.scrollWidth - window.innerWidth, 0);
+
+      // Se a fileira couber inteira na tela não há o que percorrer. Prender a
+      // página nesse caso só produziria uma tela cheia e imóvel — então a
+      // seção vira uma fileira comum.
+      if (distancia === 0) {
+        setPreso(false);
+        setAltura(undefined);
+        trilho.style.transform = "";
+        return;
+      }
+
+      setPreso(true);
       setAltura(window.innerHeight + distancia * LENTIDAO);
       posicionar();
     };
@@ -148,7 +161,11 @@ export function Equipe() {
       </div>
 
       <section ref={secaoRef} className="relative" style={{ height: altura }}>
-        <div className="sticky top-0 flex h-screen items-center overflow-hidden py-8">
+        <div
+          className={`flex items-center overflow-hidden ${
+            preso ? "sticky top-0 h-screen py-6" : "py-12"
+          }`}
+        >
           <div
             ref={trilhoRef}
             /* Recuo igual dos dois lados. Antes o primeiro cartão começava
