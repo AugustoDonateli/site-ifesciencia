@@ -20,7 +20,7 @@ const equipe = [
  * Com 1.6, a pessoa rola bem mais do que a fileira anda — dá tempo de olhar
  * cada foto. Com 1 a galeria inteira atravessa num gesto só.
  */
-const LENTIDAO = 1.6;
+const LENTIDAO = 1.2;
 
 function Cartao({
   nome,
@@ -80,7 +80,10 @@ export function Equipe() {
         return;
       }
 
-      distancia = Math.max(trilho.scrollWidth - window.innerWidth + 24, 0);
+      // Sem folga extra: com o mesmo recuo dos dois lados, no fim do percurso
+      // o último cartão para exatamente à mesma distância da borda que o
+      // primeiro começou.
+      distancia = Math.max(trilho.scrollWidth - window.innerWidth, 0);
       setAltura(window.innerHeight + distancia * LENTIDAO);
       posicionar();
     };
@@ -109,12 +112,19 @@ export function Equipe() {
 
     medir();
     window.addEventListener("scroll", aoRolar, { passive: true });
-    window.addEventListener("resize", medir);
+    // Medir no quadro seguinte: no instante do evento de resize o navegador
+    // ainda não refez o layout, e a conta sai com os tamanhos antigos.
+    const aoRedimensionar = () => requestAnimationFrame(medir);
+    window.addEventListener("resize", aoRedimensionar);
     document.fonts?.ready.then(medir);
+
+    const observador = new ResizeObserver(aoRedimensionar);
+    observador.observe(trilho);
 
     return () => {
       window.removeEventListener("scroll", aoRolar);
-      window.removeEventListener("resize", medir);
+      window.removeEventListener("resize", aoRedimensionar);
+      observador.disconnect();
     };
   }, [reduzido]);
 
@@ -141,15 +151,11 @@ export function Equipe() {
         <div className="sticky top-0 flex h-screen items-center overflow-hidden py-8">
           <div
             ref={trilhoRef}
-            className="flex min-w-max gap-5 pr-6 will-change-transform md:gap-8"
-            /* Alinha o primeiro cartão com o começo do TEXTO do cabeçalho.
-               Em CSS puro: 100% é a largura útil (sem a barra de rolagem, que
-               é o que estraga a conta quando se usa 100vw), 72rem é o max-w-6xl
-               e 1.5rem é o recuo interno do container. Sempre exato, em
-               qualquer largura, sem depender de medir na hora certa. */
-            style={{
-              paddingLeft: "max(1.5rem, calc((100% - 72rem) / 2 + 1.5rem))",
-            }}
+            /* Recuo igual dos dois lados. Antes o primeiro cartão começava
+               alinhado com o título — só que o título já saiu da tela quando a
+               galeria está rodando, então aquilo virava um vão vazio à esquerda
+               sem nada pra justificar. */
+            className="flex min-w-max gap-5 px-6 will-change-transform md:gap-8"
           >
             {equipe.map((p) => (
               <Cartao key={p.nome} {...p} />
