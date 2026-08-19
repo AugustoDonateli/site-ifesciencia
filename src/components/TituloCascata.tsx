@@ -1,17 +1,19 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { Fragment, useEffect, useRef } from "react";
 import { usarMovimentoReduzido } from "@/lib/usarMovimentoReduzido";
 
 /**
  * O título entra palavra por palavra quando a página carrega — uma vez só.
  *
- * Regra importante: o texto nasce VISÍVEL. A animação é que esconde e revela.
- * Se o JavaScript não rodar (falha, aba em segundo plano, navegador estranho),
- * o pior caso é o título aparecer sem graça — nunca sumir.
+ * Duas regras que essa peça tem que respeitar:
  *
- * A marcação é montada aqui em vez de vir pronta pra frase continuar sendo
- * uma frase só para leitor de tela e para busca.
+ * 1. O texto nasce VISÍVEL. A animação é que esconde e revela. Se o JavaScript
+ *    não rodar, o pior caso é o título aparecer sem graça — nunca sumir.
+ *
+ * 2. O espaço entre as palavras é um nó de texto de verdade, FORA dos blocos.
+ *    Espaço no fim de um inline-block é descartado pelo navegador, e o título
+ *    saiacoladoassim. Também importa pra quem copia o texto ou usa leitor de tela.
  */
 export function TituloCascata({
   texto,
@@ -60,18 +62,15 @@ export function TituloCascata({
   return (
     <h1 ref={ref} className={className}>
       {palavras.map((palavra, i) => (
-        <span
-          key={`${palavra}-${i}`}
-          className="inline-block"
-        >
+        <Fragment key={`${palavra}-${i}`}>
           <span
             data-palavra
             className={`inline-block ${palavra === destaque ? "destaque" : ""}`}
           >
             {palavra}
           </span>
-          {i < palavras.length - 1 ? " " : ""}
-        </span>
+          {i < palavras.length - 1 ? " " : null}
+        </Fragment>
       ))}
     </h1>
   );
