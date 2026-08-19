@@ -195,13 +195,24 @@ Aparece no fim da landing **e no fim de cada ficha de experimento** — do mesmo
 encerra cada vídeo. Quem conhece vocês vai reconhecer na hora; quem não conhece leva
 um bordão de brinde. Custo: zero. É texto fixo, não quebra D12.
 
-### A levantar com o Augusto
+**🔑 A tese da marca** (o *porquê* do bordão, dito pelo Augusto):
+> A gente traz a ciência de um jeito mais divertido, **diferente do que é ensinado na escola.**
+
+→ Isso é o posicionamento do projeto inteiro, e vale para escrever todo texto do site:
+o Ifesciência é o **contrário da aula chata**. Toda vez que um texto puder soar como livro
+didático, está errado.
+
+**👕 A camiseta do Ifes é o uniforme oficial do projeto.**
+→ Aparece em foto de equipe, foto de experimento e vídeo. É elemento de identidade,
+não coincidência — e reforça a confiança (tem instituição por trás).
+
+**✍️ Grafia oficial: `Ifesciência`** — uma palavra só, I maiúsculo, acento no e.
+Vale para o site inteiro, título de aba, textos e domínio.
+
+### Ainda a levantar
 - Frase ou gesto de **abertura** dos vídeos (o gancho)?
 - Como vocês chamam quem assiste?
-- Algum bordão, apelido ou piada interna recorrente?
 - Objeto, som ou trilha que sempre aparece?
-- A camiseta do Ifes conta como uniforme do projeto?
-- Jeito certo de escrever o nome: "Ifes Ciência", "IFES ciência", "Ifesciência"?
 - [ ] Formato do catálogo (vertical? grade? lista?) — reaberto, já que a galeria horizontal foi
       realocada para a equipe. Depende da identidade visual.
 - [ ] A **equipe** também é cadastrada pela dashboard, ou fica fixa no código?

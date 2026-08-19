@@ -18,17 +18,18 @@ Base: todas as decisões do [BRIEFING.md](BRIEFING.md) (D1 a D19).
 
 ---
 
-## Etapa 0 — Fundação e deploy vazio
+## Etapa 0 — Fundação e deploy vazio ✅ (falta só a Vercel)
 
 **Objetivo:** o cano inteiro funcionando antes de existir qualquer tela.
 
-- Projeto Next.js + Tailwind criado, estrutura de pastas definida.
-- Repositório no GitHub.
-- Deploy na Vercel funcionando com uma página em branco escrito "em obras".
-- Variáveis de ambiente preparadas para o Supabase.
+- [x] Next.js 16 (App Router) + TypeScript + Tailwind 4 instalados.
+- [x] Página provisória "em obras" com o bordão no rodapé.
+- [x] `.env.example` com as variáveis do Supabase (etapa 2).
+- [x] `npm run build` passando limpo.
+- [x] Repositório privado no GitHub: **AugustoDonateli/site-ifesciencia**.
+- [ ] **Deploy na Vercel** — só o Augusto pode fazer (login na conta dele).
 
-**Como conferir:** você abre um endereço da Vercel no celular e vê a página.
-**Preciso de você:** conta na Vercel e no GitHub conectadas.
+**Como conferir:** você abre o endereço da Vercel no celular e vê a página.
 
 > Deploy funcionando na etapa 0 evita a pior surpresa possível: descobrir na etapa 9 que
 > alguma coisa não sobe.
