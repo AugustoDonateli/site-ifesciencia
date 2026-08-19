@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 const itens = [
   { rotulo: "Início", href: "/" },
@@ -16,6 +16,7 @@ const itens = [
  */
 export function Menu() {
   const [encolhido, setEncolhido] = useState(false);
+  const ref = useRef<HTMLElement>(null);
 
   useEffect(() => {
     let anterior = window.scrollY;
@@ -46,10 +47,35 @@ export function Menu() {
     return () => window.removeEventListener("scroll", aoRolar);
   }, []);
 
+  /**
+   * A abertura do site precisa saber a altura do menu pra ocupar o resto
+   * exato da primeira tela. Medimos só com o menu no tamanho normal —
+   * encolhido o valor seria menor e a conta da primeira dobra sairia errada.
+   */
+  useEffect(() => {
+    const el = ref.current;
+    if (!el || encolhido) return;
+
+    const medir = () => {
+      const altura = Math.round(el.getBoundingClientRect().height);
+      document.documentElement.style.setProperty("--altura-menu", altura + "px");
+    };
+
+    medir();
+    const observador = new ResizeObserver(medir);
+    observador.observe(el);
+    document.fonts?.ready.then(medir);
+
+    return () => observador.disconnect();
+  }, [encolhido]);
+
   return (
-    <header className="sticky top-0 z-50 border-b border-borda bg-creme md:bg-creme/90 md:backdrop-blur">
+    <header
+      ref={ref}
+      className="sticky top-0 z-50 border-b border-borda bg-creme md:bg-creme/90 md:backdrop-blur"
+    >
       <nav
-        className={`mx-auto flex w-full max-w-6xl items-center justify-between gap-6 px-6 transition-all duration-300 ease-out ${
+        className={`mx-auto flex w-full max-w-[1240px] items-center justify-between gap-6 px-6 transition-all duration-300 ease-out ${
           encolhido ? "py-2" : "py-4"
         }`}
       >
