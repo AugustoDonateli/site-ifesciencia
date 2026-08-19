@@ -41,7 +41,7 @@ export function Hero() {
         <TextoQueDigita
           prefixo="A ciência está"
           variantes={LUGARES}
-          className="mt-7 min-h-[1.35em] font-titulo text-2xl font-semibold text-verde sm:text-3xl"
+          className="mt-7 font-titulo text-2xl font-semibold text-verde sm:text-3xl"
         />
 
         <p className="mt-5 max-w-md text-lg text-tinta-2">

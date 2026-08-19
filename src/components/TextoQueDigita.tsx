@@ -95,19 +95,32 @@ export function TextoQueDigita({
   }, [reduzido, variantes]);
 
   return (
-    <p className={className}>
+    <p className={`grid ${className}`}>
       {/* Leitor de tela ouve uma frase inteira e parada. */}
       <span className="sr-only">
         {prefixo} {variantes[0]}
       </span>
 
-      <span aria-hidden="true">
+      {/*
+        Fantasmas: todas as variantes ocupam a MESMA célula da grade, invisíveis.
+        A célula fica com a altura da frase mais alta, então trocar de frase
+        nunca empurra a página. Funciona em qualquer largura de tela sozinho,
+        sem eu precisar medir nada.
+      */}
+      {variantes.map((v) => (
+        <span
+          key={v}
+          aria-hidden="true"
+          className="invisible [grid-area:1/1]"
+        >
+          {prefixo} {v}
+        </span>
+      ))}
+
+      <span aria-hidden="true" className="[grid-area:1/1]">
         {prefixo}{" "}
         <span className="whitespace-pre">{visivel}</span>
-        <span
-          className={`cursor-digitando ${ocupado ? "aceso" : ""}`}
-          aria-hidden="true"
-        />
+        <span className={`cursor-digitando ${ocupado ? "aceso" : ""}`} />
       </span>
     </p>
   );
