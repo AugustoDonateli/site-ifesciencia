@@ -11,7 +11,7 @@ export function Menu() {
     <header className="sticky top-0 z-50 border-b border-borda bg-creme/90 backdrop-blur">
       <nav className="mx-auto flex w-full max-w-6xl items-center justify-between gap-6 px-6 py-4">
         <Link href="/" className="font-titulo text-xl font-bold tracking-tight">
-          Ifes<span className="destaque">ciência</span>
+          <span className="text-verde">Ifesciência</span>
         </Link>
 
         <ul className="hidden items-center gap-8 text-sm text-tinta-2 sm:flex">

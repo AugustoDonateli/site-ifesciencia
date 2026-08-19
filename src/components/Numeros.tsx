@@ -36,8 +36,9 @@ export function Numeros() {
         </div>
 
         <p className="mt-12 max-w-lg text-tinta-2">
-          Só o vídeo sobre o copo térmico passou de 8 milhões de visualizações.
-          O da gravidade, de 2,5 milhões.
+          Não é um vídeo só. O alcance vem de dezenas de experimentos
+          publicados desde 2022 — vários deles passaram de um milhão de
+          visualizações cada.
         </p>
       </div>
 

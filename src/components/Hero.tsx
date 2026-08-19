@@ -2,10 +2,13 @@ import Link from "next/link";
 import { Marcador } from "./Marcador";
 
 /**
- * A máquina de escrever entra na etapa 4, na linha do objeto.
+ * A máquina de escrever entra na etapa 4, na linha em verde.
  * Ela carrega o objetivo oficial do projeto — "a ciência está presente em
- * diversos aspectos da vida diária" — trocando o objeto a cada volta:
- * um copo térmico → uma garrafa de refrigerante → um chuveiro elétrico → tudo que você já tem em casa.
+ * diversos aspectos da vida diária" — trocando o final a cada volta:
+ * na sua cozinha → no seu banho → no seu ônibus → em tudo que você já usa.
+ *
+ * De propósito são lugares do dia a dia, não experimentos específicos:
+ * o projeto são dezenas de vídeos, não um só.
  */
 export function Hero() {
   return (
@@ -20,7 +23,7 @@ export function Hero() {
         </h1>
 
         <p className="mt-7 font-titulo text-2xl font-semibold text-verde sm:text-3xl">
-          A ciência está em um copo térmico.
+          A ciência está na sua cozinha.
         </p>
 
         <p className="mt-5 max-w-md text-lg text-tinta-2">

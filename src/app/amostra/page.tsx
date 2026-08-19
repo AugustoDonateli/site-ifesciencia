@@ -85,7 +85,7 @@ export default function Amostra() {
                 Título · Bricolage Grotesque
               </p>
               <p className="font-titulo text-5xl font-bold leading-none">
-                O copo que não esquenta
+                A lata que amassa sozinha
               </p>
             </div>
             <div>
@@ -101,9 +101,9 @@ export default function Amostra() {
                 Texto · Inter
               </p>
               <p className="max-w-xl text-tinta-2">
-                Encha o copo térmico com água quente e encoste a mão do lado de
-                fora. Ele continua frio. O segredo está no vácuo entre as duas
-                paredes do copo — sem ar, o calor não tem por onde passar.
+                Ferva um dedo de água dentro da lata e vire ela de boca para
+                baixo numa bacia com água fria. A lata amassa sozinha, num
+                estalo. Quem amassa não é a água — é o peso do ar de fora.
               </p>
             </div>
           </div>
@@ -159,9 +159,9 @@ export default function Amostra() {
                   20 min
                 </span>
               </div>
-              <h3 className="text-2xl font-bold">O copo que não esquenta</h3>
+              <h3 className="text-2xl font-bold">A lata que amassa sozinha</h3>
               <p className="mt-2 text-sm text-tinta-2">
-                Água fervendo dentro, e você segura com a mão. Como?
+                Ninguém encosta na lata e ela amassa. Quem faz isso?
               </p>
             </div>
           </div>
@@ -170,11 +170,11 @@ export default function Amostra() {
         <Secao titulo="Aviso de segurança">
           <div className="max-w-xl rounded-lg border-l-4 border-ambar bg-ambar-claro p-5">
             <p className="mb-1 text-sm font-semibold text-ambar">
-              Cuidado com a água quente
+              Cuidado com a água fervendo
             </p>
             <p className="text-sm text-tinta-2">
-              Esse experimento usa água fervendo. Faça você mesmo a parte de
-              encher o copo e mantenha os alunos a um braço de distância.
+              Esse experimento usa fogo e vapor. Faça você mesmo a parte de
+              ferver e mantenha os alunos a um braço de distância.
             </p>
           </div>
         </Secao>
@@ -182,12 +182,11 @@ export default function Amostra() {
         <Secao titulo="O que costuma dar errado">
           <div className="max-w-xl rounded-lg border border-borda bg-creme-2 p-5">
             <p className="mb-1 text-sm font-semibold">
-              O copo <span className="destaque">precisa estar seco</span> por
-              dentro
+              A lata <span className="destaque">precisa estar quase vazia</span>
             </p>
             <p className="text-sm text-tinta-2">
-              Se sobrar água entre as paredes, o vácuo se perde e o experimento
-              não funciona. Seque bem antes de começar.
+              Com muita água dentro, o vapor não toma conta da lata e ela não
+              amassa. Um dedo de água é o suficiente.
             </p>
           </div>
         </Secao>

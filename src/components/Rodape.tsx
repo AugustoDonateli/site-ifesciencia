@@ -13,7 +13,7 @@ export function Rodape() {
         <div className="flex flex-col gap-10 sm:flex-row sm:justify-between">
           <div className="max-w-sm">
             <p className="font-titulo text-2xl font-bold tracking-tight">
-              Ifes<span className="destaque">ciência</span>
+              <span className="text-verde">Ifesciência</span>
             </p>
             <p className="mt-3 text-sm text-tinta-2">
               Projeto de divulgação científica do Instituto Federal do Espírito
