@@ -134,3 +134,40 @@ h3 {
     scroll-behavior: auto !important;
   }
 }
+
+/* ---------------------------------------------------------------
+   Cursor da máquina de escrever.
+   Pisca só quando está parado — enquanto digita fica aceso, como
+   num terminal de verdade.
+   --------------------------------------------------------------- */
+
+.cursor-digitando {
+  display: inline-block;
+  width: 0.075em;
+  height: 0.95em;
+  margin-left: 0.06em;
+  vertical-align: -0.1em;
+  background: currentColor;
+  animation: piscar 1s steps(1) infinite;
+}
+
+.cursor-digitando.aceso {
+  animation: none;
+}
+
+@keyframes piscar {
+  0%,
+  50% {
+    opacity: 1;
+  }
+  50.01%,
+  100% {
+    opacity: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cursor-digitando {
+    display: none;
+  }
+}

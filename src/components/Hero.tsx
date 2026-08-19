@@ -2,6 +2,18 @@ import Link from "next/link";
 import { Marcador } from "./Marcador";
 import { TituloCascata } from "./TituloCascata";
 import { BotaoMagnetico } from "./BotaoMagnetico";
+import { TextoQueDigita } from "./TextoQueDigita";
+
+// Carrega o objetivo oficial do projeto — "a ciência está presente em diversos
+// aspectos da vida diária" — trocando o lugar a cada volta. São lugares do dia
+// a dia, não experimentos específicos: o projeto são dezenas de vídeos.
+const LUGARES = [
+  "na sua cozinha.",
+  "no seu banho.",
+  "no seu ônibus.",
+  "no seu trabalho.",
+  "em tudo que você já usa.",
+];
 
 /**
  * A linha em verde é onde entra o componente do React Bits que o Augusto
@@ -26,10 +38,11 @@ export function Hero() {
           className="text-5xl font-bold sm:text-6xl lg:text-7xl"
         />
 
-        {/* AQUI entra o componente do React Bits (texto que troca). */}
-        <p className="mt-7 font-titulo text-2xl font-semibold text-verde sm:text-3xl">
-          A ciência está na sua cozinha.
-        </p>
+        <TextoQueDigita
+          prefixo="A ciência está"
+          variantes={LUGARES}
+          className="mt-7 min-h-[1.35em] font-titulo text-2xl font-semibold text-verde sm:text-3xl"
+        />
 
         <p className="mt-5 max-w-md text-lg text-tinta-2">
           O Ifesciência transforma experimentos curiosos em vídeos curtos que já
