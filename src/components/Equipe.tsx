@@ -5,32 +5,40 @@ import { Marcador } from "./Marcador";
  * Etapa 5 transforma esta fileira na galeria horizontal:
  * no computador a página prende e passa de lado; no celular arrasta com o dedo.
  * Por enquanto é uma grade parada, sem nenhum movimento.
+ *
+ * Sobrenomes a confirmar com o Augusto.
  */
 const equipe = [
-  { nome: "Hilton Moulin" },
-  { nome: "Augusto Donateli" },
-  { nome: "A definir" },
-  { nome: "A definir" },
-  { nome: "A definir" },
+  { nome: "Hilton Moulin", papel: "Coordenação" },
+  { nome: "Augusto Donateli", papel: "Equipe" },
+  { nome: "Laura Fabris Scarpe", papel: "Equipe" },
+  { nome: "Pedro", papel: "Equipe" },
+  { nome: "Lucas Grifo da Costa", papel: "Monitoria" },
 ];
 
 export function Equipe() {
   return (
     <section className="mx-auto w-full max-w-6xl px-6 pb-20 md:pb-28">
-      <div className="mb-10">
+      <div className="mb-10 max-w-xl">
         <p className="mb-5 font-mono text-xs uppercase tracking-[0.18em] text-tinta-3">
-          Quem faz
+          A equipe
         </p>
         <h2 className="text-4xl font-bold sm:text-5xl">
-          Cinco pessoas e uma câmera
+          Quem faz o Ifesciência
         </h2>
+        <p className="mt-6 text-tinta-2">
+          Cinco pessoas cuidam de tudo: escolher o experimento, montar,
+          gravar, editar e explicar. Desde 2022, duas gerações de estudantes já
+          passaram pelo projeto.
+        </p>
       </div>
 
       <ul className="grid grid-cols-2 gap-5 sm:grid-cols-3 lg:grid-cols-5">
-        {equipe.map((pessoa, i) => (
-          <li key={i}>
+        {equipe.map((pessoa) => (
+          <li key={pessoa.nome}>
             <Marcador proporcao="3/4" rotulo="foto" />
             <p className="mt-3 text-sm font-medium">{pessoa.nome}</p>
+            <p className="font-mono text-xs text-tinta-3">{pessoa.papel}</p>
           </li>
         ))}
       </ul>

@@ -1,7 +1,7 @@
 const numeros = [
-  { valor: "500 mil", rotulo: "pessoas seguindo" },
-  { valor: "13 milhões", rotulo: "de visualizações" },
-  { valor: "2022", rotulo: "desde o começo" },
+  { valor: "500 mil", rotulo: "pessoas acompanham o projeto" },
+  { valor: "13 milhões", rotulo: "de visualizações acumuladas" },
+  { valor: "2026", rotulo: "finalista do Prêmio iBest, categoria Ciências" },
 ];
 
 // Etapa 4 transforma isso na faixa correndo.
@@ -11,26 +11,33 @@ const imprensa = [
   "ES Hoje",
   "Aqui Notícias",
   "Revista Conexão",
-  "Prêmio iBest 2026",
+  "Portal do Ifes",
 ];
 
 export function Numeros() {
   return (
     <section className="border-y border-borda bg-creme-2">
       <div className="mx-auto w-full max-w-6xl px-6 py-14">
+        <p className="mb-10 font-mono text-xs uppercase tracking-[0.18em] text-tinta-3">
+          Alcance
+        </p>
+
         <div className="grid gap-10 sm:grid-cols-3">
           {numeros.map((n) => (
             <div key={n.rotulo}>
-              <p className="font-titulo text-5xl font-bold lg:text-6xl">
+              <p className="font-titulo text-5xl font-bold text-verde lg:text-6xl">
                 {n.valor}
               </p>
-              <p className="mt-2 text-sm text-tinta-2">{n.rotulo}</p>
+              <p className="mt-3 max-w-[16rem] text-sm text-tinta-2">
+                {n.rotulo}
+              </p>
             </div>
           ))}
         </div>
 
-        <p className="mt-12 max-w-md text-tinta-2">
-          Nenhuma dessas pessoas precisou decorar fórmula pra entender.
+        <p className="mt-12 max-w-lg text-tinta-2">
+          Só o vídeo sobre o copo térmico passou de 8 milhões de visualizações.
+          O da gravidade, de 2,5 milhões.
         </p>
       </div>
 

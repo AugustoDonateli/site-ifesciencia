@@ -2,41 +2,45 @@ import Link from "next/link";
 import { Marcador } from "./Marcador";
 
 /**
- * Etapa 3: estrutura pura.
- * A palavra "sua aula" é onde a máquina de escrever entra na etapa 4 —
- * ela vai revezar entre "sua aula", "sua casa", "sua cozinha", "seu intervalo".
+ * A máquina de escrever entra na etapa 4, na linha do objeto.
+ * Ela carrega o objetivo oficial do projeto — "a ciência está presente em
+ * diversos aspectos da vida diária" — trocando o objeto a cada volta:
+ * um copo térmico → uma garrafa de refrigerante → um chuveiro elétrico → tudo que você já tem em casa.
  */
 export function Hero() {
   return (
     <section className="mx-auto grid w-full max-w-6xl items-center gap-12 px-6 py-16 md:grid-cols-2 md:py-24">
       <div>
-        <p className="mb-5 font-mono text-xs uppercase tracking-[0.18em] text-tinta-3">
-          Ifes · Campus Cachoeiro de Itapemirim
+        <p className="mb-5 font-mono text-xs uppercase leading-relaxed tracking-[0.18em] text-tinta-3">
+          Divulgação científica · Ifes Campus Cachoeiro de Itapemirim
         </p>
 
         <h1 className="text-5xl font-bold sm:text-6xl lg:text-7xl">
-          Ciência que sai do vídeo e entra na{" "}
-          <span className="destaque">sua aula</span>
+          Ciência como você <span className="destaque">nunca</span> viu
         </h1>
 
-        <p className="mt-6 max-w-md text-lg text-tinta-2">
-          Todo experimento que a gente grava está aqui, com os materiais, o passo
-          a passo e o vídeo. Feito pra você repetir com a turma — sem laboratório
-          e sem gastar quase nada.
+        <p className="mt-7 font-titulo text-2xl font-semibold text-verde sm:text-3xl">
+          A ciência está em um copo térmico.
+        </p>
+
+        <p className="mt-5 max-w-md text-lg text-tinta-2">
+          O Ifesciência transforma experimentos curiosos em vídeos curtos que já
+          passaram de 13 milhões de visualizações. Um projeto feito por
+          estudantes, com apoio do Ifes e financiamento da Fapes.
         </p>
 
         <div className="mt-9 flex flex-wrap items-center gap-3">
           <Link
-            href="/experimentos"
+            href="#projeto"
             className="rounded-full bg-verde px-7 py-3.5 text-sm font-medium text-white transition-colors hover:bg-verde-escuro"
           >
-            Ver experimentos
+            Conhecer o projeto
           </Link>
           <Link
-            href="#sobre"
+            href="/experimentos"
             className="rounded-full border border-tinta px-7 py-3.5 text-sm font-medium transition-colors hover:bg-creme-2"
           >
-            Conhecer o projeto
+            Ver experimentos
           </Link>
         </div>
       </div>

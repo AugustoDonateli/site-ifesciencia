@@ -3,7 +3,7 @@ import Link from "next/link";
 const itens = [
   { rotulo: "Início", href: "/" },
   { rotulo: "Experimentos", href: "/experimentos" },
-  { rotulo: "Sobre nós", href: "#sobre" },
+  { rotulo: "O projeto", href: "#projeto" },
 ];
 
 export function Menu() {
