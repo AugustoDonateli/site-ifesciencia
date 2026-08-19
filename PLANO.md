@@ -18,7 +18,11 @@ Base: todas as decisões do [BRIEFING.md](BRIEFING.md) (D1 a D19).
 
 ---
 
-## Etapa 0 — Fundação e deploy vazio ✅ (falta só a Vercel)
+## Etapa 0 — Fundação e deploy vazio ✅ CONCLUÍDA
+
+**No ar:** https://site-ifesciencia.vercel.app
+Todo `git push` na branch `main` atualiza o site sozinho.
+
 
 **Objetivo:** o cano inteiro funcionando antes de existir qualquer tela.
 
@@ -27,7 +31,7 @@ Base: todas as decisões do [BRIEFING.md](BRIEFING.md) (D1 a D19).
 - [x] `.env.example` com as variáveis do Supabase (etapa 2).
 - [x] `npm run build` passando limpo.
 - [x] Repositório privado no GitHub: **AugustoDonateli/site-ifesciencia**.
-- [ ] **Deploy na Vercel** — só o Augusto pode fazer (login na conta dele).
+- [x] **Deploy na Vercel** ligado ao GitHub.
 
 **Como conferir:** você abre o endereço da Vercel no celular e vê a página.
 
