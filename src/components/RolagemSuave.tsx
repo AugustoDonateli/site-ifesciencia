@@ -19,7 +19,7 @@ export function RolagemSuave() {
     if (reduzido) return;
 
     const lenis = new Lenis({
-      duration: 1.1,
+      duration: 0.9,
       smoothWheel: true,
       // toque continua nativo
       syncTouch: false,

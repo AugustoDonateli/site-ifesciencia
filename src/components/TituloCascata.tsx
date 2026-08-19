@@ -62,7 +62,7 @@ export function TituloCascata({
       {palavras.map((palavra, i) => (
         <span
           key={`${palavra}-${i}`}
-          className="inline-block overflow-hidden align-bottom"
+          className="inline-block"
         >
           <span
             data-palavra

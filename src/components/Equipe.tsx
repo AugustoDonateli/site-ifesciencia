@@ -18,7 +18,7 @@ const equipe = [
 
 export function Equipe() {
   return (
-    <section className="mx-auto w-full max-w-6xl px-6 pb-20 md:pb-28">
+    <section className="mx-auto w-full max-w-6xl px-6 py-20 md:py-28">
       <div className="mb-10 max-w-xl">
         <p className="mb-5 font-mono text-xs uppercase tracking-[0.18em] text-tinta-3">
           A equipe

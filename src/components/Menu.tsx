@@ -19,13 +19,27 @@ export function Menu() {
 
   useEffect(() => {
     let anterior = window.scrollY;
+    let agendado = false;
 
+    // O cálculo roda no máximo uma vez por quadro. Sem isso, cada evento de
+    // rolagem dispararia uma renderização do React e a página engasga.
     const aoRolar = () => {
-      const atual = window.scrollY;
-      // Só encolhe depois de sair do topo, pra não piscar no começo.
-      if (atual > 120 && atual > anterior) setEncolhido(true);
-      else if (atual < anterior) setEncolhido(false);
-      anterior = atual;
+      if (agendado) return;
+      agendado = true;
+
+      requestAnimationFrame(() => {
+        agendado = false;
+        const atual = window.scrollY;
+
+        // Só encolhe depois de sair do topo, pra não piscar no começo.
+        const deveEncolher = atual > 120 && atual > anterior;
+        const deveVoltar = atual < anterior;
+
+        if (deveEncolher) setEncolhido(true);
+        else if (deveVoltar) setEncolhido(false);
+
+        anterior = atual;
+      });
     };
 
     window.addEventListener("scroll", aoRolar, { passive: true });
@@ -33,7 +47,7 @@ export function Menu() {
   }, []);
 
   return (
-    <header className="sticky top-0 z-50 border-b border-borda bg-creme/90 backdrop-blur">
+    <header className="sticky top-0 z-50 border-b border-borda bg-creme md:bg-creme/90 md:backdrop-blur">
       <nav
         className={`mx-auto flex w-full max-w-6xl items-center justify-between gap-6 px-6 transition-all duration-300 ease-out ${
           encolhido ? "py-2" : "py-4"

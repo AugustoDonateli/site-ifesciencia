@@ -53,8 +53,18 @@ h1,
 h2,
 h3 {
   font-family: var(--font-titulo);
-  letter-spacing: -0.02em;
-  line-height: 1.05;
+  letter-spacing: -0.015em;
+}
+
+/* Título principal: entrelinha mais folgada e espaço embaixo.
+   Com fonte muito grande, 1.05 gruda as linhas uma na outra. */
+h1 {
+  line-height: 1.12;
+}
+
+h2,
+h3 {
+  line-height: 1.1;
 }
 
 /* Marca uma palavra importante no meio de uma frase. */
