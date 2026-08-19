@@ -1,4 +1,7 @@
+"use client";
+
 import Link from "next/link";
+import { useEffect, useRef } from "react";
 
 const redes = [
   { rotulo: "Instagram", href: "https://www.instagram.com/ifesciencia/" },
@@ -6,9 +9,49 @@ const redes = [
   { rotulo: "TikTok", href: "#" },
 ];
 
+/**
+ * O rodapé aparece por trás: a página desliza pra cima e revela ele,
+ * em vez de ele simplesmente vir depois.
+ *
+ * Só no computador. No celular um rodapé fixo briga com as barras do
+ * navegador do Instagram, então lá ele é um rodapé normal — decisão
+ * de propósito, não "desligado no celular".
+ */
 export function Rodape() {
+  const ref = useRef<HTMLElement>(null);
+
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+
+    const medir = () => {
+      const altura = Math.ceil(el.getBoundingClientRect().height);
+      document.documentElement.style.setProperty(
+        "--altura-rodape",
+        `${altura}px`,
+      );
+      document.documentElement.setAttribute("data-rodape-pronto", "");
+    };
+
+    medir();
+
+    // Três gatilhos, porque um só não basta:
+    // o ResizeObserver não entrega nada com a aba em segundo plano,
+    // e a altura muda de verdade quando as fontes terminam de carregar.
+    const observador = new ResizeObserver(medir);
+    observador.observe(el);
+    window.addEventListener("resize", medir);
+    document.fonts?.ready.then(medir);
+
+    return () => {
+      observador.disconnect();
+      window.removeEventListener("resize", medir);
+      document.documentElement.removeAttribute("data-rodape-pronto");
+    };
+  }, []);
+
   return (
-    <footer className="border-t border-borda">
+    <footer ref={ref} className="rodape-atras border-t border-borda bg-creme">
       <div className="mx-auto w-full max-w-6xl px-6 py-14">
         <div className="flex flex-col gap-10 sm:flex-row sm:justify-between">
           <div className="max-w-sm">
@@ -32,7 +75,7 @@ export function Rodape() {
               </p>
               <ul className="flex flex-col gap-2 text-sm text-tinta-2">
                 <li>
-                  <Link href="#projeto" className="hover:text-tinta">
+                  <Link href="/#projeto" className="hover:text-tinta">
                     O projeto
                   </Link>
                 </li>

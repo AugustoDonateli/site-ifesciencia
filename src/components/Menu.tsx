@@ -1,4 +1,7 @@
+"use client";
+
 import Link from "next/link";
+import { useEffect, useState } from "react";
 
 const itens = [
   { rotulo: "Início", href: "/" },
@@ -6,11 +9,42 @@ const itens = [
   { rotulo: "O projeto", href: "#projeto" },
 ];
 
+/**
+ * O menu encolhe quando você desce e volta ao normal quando sobe.
+ * Devolve espaço de tela pra quem está lendo — importante no celular,
+ * onde a barra do Instagram já come um pedaço.
+ */
 export function Menu() {
+  const [encolhido, setEncolhido] = useState(false);
+
+  useEffect(() => {
+    let anterior = window.scrollY;
+
+    const aoRolar = () => {
+      const atual = window.scrollY;
+      // Só encolhe depois de sair do topo, pra não piscar no começo.
+      if (atual > 120 && atual > anterior) setEncolhido(true);
+      else if (atual < anterior) setEncolhido(false);
+      anterior = atual;
+    };
+
+    window.addEventListener("scroll", aoRolar, { passive: true });
+    return () => window.removeEventListener("scroll", aoRolar);
+  }, []);
+
   return (
     <header className="sticky top-0 z-50 border-b border-borda bg-creme/90 backdrop-blur">
-      <nav className="mx-auto flex w-full max-w-6xl items-center justify-between gap-6 px-6 py-4">
-        <Link href="/" className="font-titulo text-xl font-bold tracking-tight">
+      <nav
+        className={`mx-auto flex w-full max-w-6xl items-center justify-between gap-6 px-6 transition-all duration-300 ease-out ${
+          encolhido ? "py-2" : "py-4"
+        }`}
+      >
+        <Link
+          href="/"
+          className={`font-titulo font-bold tracking-tight transition-all duration-300 ease-out ${
+            encolhido ? "text-lg" : "text-xl"
+          }`}
+        >
           <span className="text-verde">Ifesciência</span>
         </Link>
 
@@ -31,7 +65,9 @@ export function Menu() {
           href="https://www.instagram.com/ifesciencia/"
           target="_blank"
           rel="noreferrer"
-          className="rounded-full bg-verde px-5 py-2 text-sm font-medium text-white transition-colors hover:bg-verde-escuro"
+          className={`rounded-full bg-verde text-sm font-medium text-white transition-all duration-300 ease-out hover:bg-verde-escuro ${
+            encolhido ? "px-4 py-1.5" : "px-5 py-2"
+          }`}
         >
           Contato
         </a>

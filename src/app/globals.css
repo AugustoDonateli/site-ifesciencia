@@ -65,3 +65,62 @@ h3 {
 ::selection {
   background: var(--color-verde-claro);
 }
+
+/* ---------------------------------------------------------------
+   Faixa correndo (imprensa).
+   CSS puro: roda fora da thread principal, não engasga em celular fraco.
+   --------------------------------------------------------------- */
+
+.faixa-trilho {
+  animation: correr 34s linear infinite;
+}
+
+@keyframes correr {
+  to {
+    transform: translateX(-100%);
+  }
+}
+
+.faixa:hover .faixa-trilho {
+  animation-play-state: paused;
+}
+
+/* ---------------------------------------------------------------
+   Rodapé que aparece por trás.
+   Só no computador: no celular um rodapé fixo briga com as barras do
+   navegador do Instagram, então lá ele é um rodapé normal.
+   --------------------------------------------------------------- */
+
+@media (min-width: 768px) {
+  /* Só vale depois que o rodapé se mediu, pra não sobrepor no primeiro quadro. */
+  html[data-rodape-pronto] .conteudo-acima {
+    position: relative;
+    z-index: 1;
+    background: var(--color-creme);
+    margin-bottom: var(--altura-rodape);
+  }
+
+  html[data-rodape-pronto] .rodape-atras {
+    position: fixed;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    z-index: 0;
+  }
+}
+
+/* Quem desligou movimento no sistema não recebe nada disso. */
+@media (prefers-reduced-motion: reduce) {
+  .faixa-trilho {
+    animation: none;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

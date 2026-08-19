@@ -7,8 +7,6 @@ import { Chamada } from "@/components/Chamada";
 import { Rodape } from "@/components/Rodape";
 
 /**
- * Etapa 3 — a landing inteira, sem nenhuma animação.
- *
  * A ordem segue a prioridade do Augusto: o site é do projeto.
  * Primeiro quem é o Ifesciência, depois a prova, depois a equipe.
  * Os experimentos vêm por último, como recompensa.
@@ -16,14 +14,16 @@ import { Rodape } from "@/components/Rodape";
 export default function Home() {
   return (
     <>
-      <Menu />
-      <main className="flex-1">
-        <Hero />
-        <Projeto />
-        <Numeros />
-        <Equipe />
-        <Chamada />
-      </main>
+      <div className="conteudo-acima">
+        <Menu />
+        <main>
+          <Hero />
+          <Projeto />
+          <Numeros />
+          <Equipe />
+          <Chamada />
+        </main>
+      </div>
       <Rodape />
     </>
   );
