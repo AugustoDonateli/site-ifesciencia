@@ -70,7 +70,9 @@ Todo `git push` na branch `main` atualiza o site sozinho.
 
 ---
 
-## Etapa 3 — Landing, só a estrutura
+## Etapa 3 — Landing, só a estrutura ✅ CONCLUÍDA
+
+**No ar:** https://site-ifesciencia.vercel.app
 
 **Objetivo:** a página inteira montada, **sem nenhuma animação**.
 
