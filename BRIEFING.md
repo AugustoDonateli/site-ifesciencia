@@ -459,3 +459,46 @@ Clicar num experimento faz a miniatura **crescer e virar o vídeo da ficha**, co
 Transitions. É a ideia da abertura descartada, mas num lugar melhor: é útil, dá sensação de
 aplicativo e **funciona sozinha para os 20 experimentos** sem ninguém programar nada por item
 — respeita D12.
+
+---
+
+## 12. Ideias ambiciosas — decidido na sessão de mecânicas da landing
+
+### ✅ APROVADA — parede de imagens no hero (referência: Netflix)
+
+Fundo do hero com **muitas capas de vídeo** em vez de uma foto só.
+Referência dada pelo Augusto: a home da Netflix — grade de pôsteres em perspectiva,
+escurecida no centro pra o texto vencer, com as bordas se apagando.
+
+O que faz aquilo funcionar (e não virar poluição):
+1. A grade é **deformada em perspectiva**, não é grade reta. É isso que dá "parede", não "mosaico".
+2. **Escurecimento pesado** por cima. Sem isso o texto some. É o detalhe que todo mundo esquece.
+3. As bordas **se apagam** em vez de cortar reto.
+
+Detalhe que muda o desenho: **o Ifesciência só publica conteúdo curto (shorts)** — as capas
+são **verticais (9:16)**, não horizontais. Isso na verdade ajuda: pôster vertical é exatamente
+o formato que a Netflix usa.
+
+Decisão pendente: a paleta é creme e o hero da Netflix é escuro. Ou o hero vira uma faixa
+escura, ou as capas são lavadas em creme. Ver discussão.
+
+### 📌 ANOTADA PARA DEPOIS — o hero com física de verdade
+
+Aprovada pelo Augusto ("muita personalidade"), mas **fica pra depois** por dar bastante trabalho.
+
+Como ele quer: não são formas genéricas. São **objetos reais dos vídeos do Ifesciência**
+— o copo Stanley, e outros que a equipe escolher — caindo, colidindo e podendo ser
+arrastados e arremessados com o dedo.
+
+O trabalho que é da equipe: recortar cada objeto em PNG com fundo transparente.
+O trabalho que é meu: física, colisão, arremesso e o plano B pra celular fraco.
+
+### ❌ RECUSADAS
+- **Números ao vivo do YouTube** — o Ifesciência é grande no **Instagram**, não no YouTube.
+  Puxar número de lá mostraria um número pequeno e falso sobre o alcance real.
+- **Cards da equipe com vídeo em loop** — o Augusto prefere manter foto parada.
+
+### Ainda em aberto
+- Como manter os números atualizados sem API (ver discussão: campo na dashboard).
+- Onde a física mora: no hero ou como entrada do catálogo.
+- Se clicar num objeto da física leva ao experimento daquele objeto.
