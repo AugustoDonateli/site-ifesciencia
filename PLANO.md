@@ -40,7 +40,9 @@ Todo `git push` na branch `main` atualiza o site sozinho.
 
 ---
 
-## Etapa 1 — Identidade e peças básicas
+## Etapa 1 — Identidade e peças básicas ✅ CONCLUÍDA
+
+**Amostra:** https://site-ifesciencia.vercel.app/amostra
 
 **Objetivo:** travar a aparência antes de construir qualquer seção em cima dela.
 

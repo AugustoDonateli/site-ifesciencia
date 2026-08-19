@@ -1,14 +1,41 @@
 @import "tailwindcss";
 
 /*
-  Etapa 0: só o mínimo.
-  A paleta de verdade (verde do Ifesciência + apoios) e a tipografia definitiva
-  entram na etapa 1. Nada de decidir cor aqui.
+  Identidade do Ifesciência — etapa 1.
+  Paleta escolhida pelo Augusto: tomate como cor de destaque, verde vivo da marca,
+  fundo creme, sem modo escuro.
 */
 
-@theme inline {
-  --font-sans: var(--font-sans);
-  --font-mono: var(--font-mono);
+@theme {
+  /* Fundos */
+  --color-creme: #faf7ef;
+  --color-creme-2: #f3efe4;
+  --color-borda: #e3decf;
+
+  /* Texto */
+  --color-tinta: #17170f;
+  --color-tinta-2: #5c594c;
+  --color-tinta-3: #8a8674;
+
+  /* Verde — a marca */
+  --color-verde: #2f9e44;
+  --color-verde-escuro: #227533;
+  --color-verde-claro: #e6f4e9;
+
+  /* Tomate — as palavras importantes */
+  --color-tomate: #e23d28;
+  --color-tomate-escuro: #b32d1c;
+  --color-tomate-claro: #fbeae7;
+
+  /* Âmbar — avisos e segurança.
+     Fica separado do tomate de propósito: se aviso e destaque tivessem a mesma cor,
+     ninguém enxergaria o aviso. */
+  --color-ambar: #b45309;
+  --color-ambar-claro: #fef3c7;
+
+  /* Tipografia */
+  --font-titulo: var(--font-bricolage), system-ui, sans-serif;
+  --font-texto: var(--font-inter), system-ui, sans-serif;
 }
 
 html {
@@ -16,5 +43,25 @@ html {
 }
 
 body {
-  font-family: var(--font-sans), system-ui, sans-serif;
+  background: var(--color-creme);
+  color: var(--color-tinta);
+  font-family: var(--font-texto);
+}
+
+/* Títulos usam a fonte de personalidade e apertam o espaçamento. */
+h1,
+h2,
+h3 {
+  font-family: var(--font-titulo);
+  letter-spacing: -0.02em;
+  line-height: 1.05;
+}
+
+/* Marca uma palavra importante no meio de uma frase. */
+.destaque {
+  color: var(--color-tomate);
+}
+
+::selection {
+  background: var(--color-verde-claro);
 }

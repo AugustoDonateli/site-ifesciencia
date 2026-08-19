@@ -123,8 +123,32 @@ Depois a página volta a rolar normalmente.
 sem curso, sem função, sem frase, sem @.
 → Professor orientador: **Hilton** Moulin (confirmado).
 
-**D13 — Paleta: verde e branco** (prévia dada pelo Augusto). Fotos do projeto e a logo virão
-depois para fechar a paleta de verdade.
+**D13 — ✅ PALETA E TIPOGRAFIA — fechadas na etapa 1.**
+
+| Papel | Cor | Uso |
+|---|---|---|
+| Fundo | `#FAF7EF` creme | O fundo do site. **Não é branco puro** — cansa menos a vista à noite. |
+| Fundo 2 | `#F3EFE4` | Cards e blocos. |
+| Borda | `#E3DECF` | Fios e divisórias. |
+| Tinta | `#17170F` | Texto principal. |
+| Tinta suave | `#5C594C` | Texto secundário. |
+| **Verde** | `#2F9E44` | A marca. Botões, etiquetas de área. |
+| **Tomate** | `#E23D28` | **As palavras importantes.** Escolhido pelo Augusto. |
+| Âmbar | `#B45309` | **Avisos e segurança.** |
+
+**Por que o âmbar existe:** o tomate virou a cor de destaque, então ele não pode ser
+também a cor de perigo — aviso de segurança e palavra importante ficariam iguais e ninguém
+enxergaria o aviso. O âmbar resolve isso.
+
+**Sem modo escuro** (decisão do Augusto): dobraria o trabalho de toda etapa e o público
+chega pelo Instagram, de dia, em celular comum.
+
+**Tipografia:** títulos em **Bricolage Grotesque** (a personalidade mora aqui),
+texto corrido em **Inter** (neutro, porque a ficha do experimento é para ler).
+Nunca a mesma fonte nos dois — é o que dá cara de modelo pronto.
+
+*(O verde é aproximado de uma imagem de 150px da logo. Quando chegar o arquivo bom,
+pego a cor exata.)*
 
 **D14 — A regra mais importante do projeto (corrigida três vezes pelo Augusto).**
 
