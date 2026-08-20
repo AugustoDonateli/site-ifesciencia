@@ -1,22 +1,29 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 import { criarClienteNavegador } from "@/lib/supabase-navegador";
 
 /**
- * Login por link no e-mail. Sem senha de propósito: são cinco pessoas, a
- * equipe troca todo ano letivo, e senha esquecida vira suporte pra mim.
- * Link no e-mail não tem o que esquecer.
+ * Entrada da equipe.
+ *
+ * Senha em vez de link no e-mail. O serviço de e-mail embutido do Supabase
+ * manda pouquíssimas mensagens por hora — é feito para desenvolvimento, não
+ * para uso real. Depender dele significaria que publicar um experimento pode
+ * falhar porque outra pessoa da equipe entrou primeiro naquela hora.
+ *
+ * A segurança não vem daqui: qualquer um consegue criar uma conta. Quem não
+ * estiver na lista de e-mails autorizados não vira membro, e as regras de
+ * acesso do banco não deixam ler nem escrever nada.
  */
 export default function Entrar() {
+  const router = useRouter();
+  const [modo, setModo] = useState<"entrar" | "criar">("entrar");
   const [email, setEmail] = useState("");
-  const [estado, setEstado] = useState<"parado" | "enviando" | "enviado">(
-    "parado",
-  );
+  const [senha, setSenha] = useState("");
+  const [ocupado, setOcupado] = useState(false);
   const [erro, setErro] = useState<string | null>(null);
 
-  // O link do e-mail volta com o motivo quando falha, e sem isto a pessoa
-  // ficaria olhando um formulário em branco sem saber o que aconteceu.
   useEffect(() => {
     const motivo = new URLSearchParams(window.location.search).get("erro");
     if (motivo) setErro(motivo);
@@ -24,23 +31,25 @@ export default function Entrar() {
 
   const enviar = async (e: React.FormEvent) => {
     e.preventDefault();
-    setEstado("enviando");
+    setOcupado(true);
     setErro(null);
 
     const supabase = criarClienteNavegador();
-    const { error } = await supabase.auth.signInWithOtp({
-      email: email.trim(),
-      options: {
-        emailRedirectTo: `${window.location.origin}/auth/confirmar`,
-      },
-    });
+    const credenciais = { email: email.trim().toLowerCase(), password: senha };
+
+    const { error } =
+      modo === "entrar"
+        ? await supabase.auth.signInWithPassword(credenciais)
+        : await supabase.auth.signUp(credenciais);
 
     if (error) {
-      setErro(error.message);
-      setEstado("parado");
+      setErro(traduzir(error.message));
+      setOcupado(false);
       return;
     }
-    setEstado("enviado");
+
+    router.replace("/dashboard");
+    router.refresh();
   };
 
   return (
@@ -50,54 +59,89 @@ export default function Entrar() {
           Área da equipe
         </p>
         <h1 className="text-3xl font-bold sm:text-4xl">
-          Entrar no <span className="text-verde">Ifesciência</span>
+          {modo === "entrar" ? "Entrar no " : "Criar acesso ao "}
+          <span className="text-verde">Ifesciência</span>
         </h1>
 
-        {estado === "enviado" ? (
-          <div className="mt-8 rounded-lg border border-borda bg-creme-2 p-5">
-            <p className="font-medium">Link enviado</p>
-            <p className="mt-2 text-sm text-tinta-2">
-              Abra o e-mail que acabou de chegar em{" "}
-              <span className="text-tinta">{email}</span> e clique no link. Ele
-              traz você direto para cá, já conectado.
-            </p>
-          </div>
-        ) : (
-          <form onSubmit={enviar} className="mt-8">
-            <label
-              htmlFor="email"
-              className="mb-2 block text-sm font-medium text-tinta-2"
-            >
-              Seu e-mail
-            </label>
-            <input
-              id="email"
-              type="email"
-              required
-              value={email}
-              onChange={(ev) => setEmail(ev.target.value)}
-              placeholder="voce@exemplo.com"
-              className="w-full rounded-lg border border-borda bg-creme px-4 py-3 outline-none transition-colors focus:border-verde"
-            />
+        <form onSubmit={enviar} className="mt-8">
+          <label htmlFor="email" className="mb-2 block text-sm font-medium">
+            Seu e-mail
+          </label>
+          <input
+            id="email"
+            type="email"
+            required
+            autoComplete="email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            className="w-full rounded-lg border border-borda bg-creme px-4 py-3 outline-none transition-colors focus:border-verde"
+          />
 
-            {erro ? (
-              <p className="mt-3 text-sm text-tomate">{erro}</p>
-            ) : null}
+          <label htmlFor="senha" className="mb-2 mt-5 block text-sm font-medium">
+            Senha
+          </label>
+          <input
+            id="senha"
+            type="password"
+            required
+            minLength={6}
+            autoComplete={modo === "entrar" ? "current-password" : "new-password"}
+            value={senha}
+            onChange={(e) => setSenha(e.target.value)}
+            className="w-full rounded-lg border border-borda bg-creme px-4 py-3 outline-none transition-colors focus:border-verde"
+          />
+          {modo === "criar" ? (
+            <p className="mt-2 text-xs text-tinta-3">Mínimo de 6 caracteres.</p>
+          ) : null}
 
-            <button
-              type="submit"
-              disabled={estado === "enviando"}
-              className="mt-5 w-full rounded-full bg-verde px-6 py-3.5 text-sm font-medium text-white transition-colors hover:bg-verde-escuro disabled:opacity-60"
-            >
-              {estado === "enviando" ? "Enviando..." : "Receber link de acesso"}
-            </button>
+          {erro ? <p className="mt-4 text-sm text-tomate">{erro}</p> : null}
 
-            <p className="mt-5 text-sm text-tinta-3">
-              Só funciona para e-mails autorizados da equipe.
-            </p>
-          </form>
-        )}
+          <button
+            type="submit"
+            disabled={ocupado}
+            className="mt-6 w-full rounded-full bg-verde px-6 py-3.5 text-sm font-medium text-white transition-colors hover:bg-verde-escuro disabled:opacity-60"
+          >
+            {ocupado
+              ? "Um instante..."
+              : modo === "entrar"
+                ? "Entrar"
+                : "Criar acesso"}
+          </button>
+        </form>
+
+        <button
+          type="button"
+          onClick={() => {
+            setModo(modo === "entrar" ? "criar" : "entrar");
+            setErro(null);
+          }}
+          className="mt-6 text-sm text-tinta-2 underline underline-offset-4 transition-colors hover:text-tinta"
+        >
+          {modo === "entrar"
+            ? "Primeira vez aqui? Criar meu acesso"
+            : "Já tenho acesso, quero entrar"}
+        </button>
+
+        <p className="mt-8 text-sm text-tinta-3">
+          Só quem está na lista de autorizados consegue usar o painel.
+        </p>
       </div>
     </main>
   );
+}
+
+/** As mensagens do Supabase vêm em inglês e técnicas demais. */
+function traduzir(mensagem: string) {
+  const m = mensagem.toLowerCase();
+  if (m.includes("invalid login credentials"))
+    return "E-mail ou senha não conferem.";
+  if (m.includes("already registered"))
+    return "Esse e-mail já tem acesso. Use a opção de entrar.";
+  if (m.includes("rate limit"))
+    return "Muitas tentativas seguidas. Espere alguns minutos.";
+  if (m.includes("password"))
+    return "A senha precisa de pelo menos 6 caracteres.";
+  if (m.includes("confirm"))
+    return "A confirmação por e-mail ainda está ligada no Supabase — precisa ser desligada.";
+  return mensagem;
 }
