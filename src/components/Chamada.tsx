@@ -5,9 +5,31 @@ import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import { usarMovimentoReduzido } from "@/lib/usarMovimentoReduzido";
 
+/**
+ * Medidas tiradas dos quadros de verdade, não chutadas.
+ *
+ * O objeto DESCE 42px dentro da própria caixa entre o primeiro quadro e os
+ * seguintes — é a queda que sobrou do vídeo. Sem corrigir isso, o copo
+ * inteiro pousava num lugar e as metades apareciam em outro, mais embaixo.
+ *
+ * E o objeto ocupa pouco mais da metade da caixa: dimensionar pela caixa
+ * deixava o copo pequeno demais na tela.
+ */
 const QUADROS = 13;
-const LARGURA = 130;
-const ALTURA = Math.round((LARGURA * 460) / 280);
+
+/** Onde fica a base do objeto em cada quadro, na imagem original de 460px. */
+const BASE_POR_QUADRO = [364, 394, 401, 402, 403, 404, 405, 405, 405, 406, 406, 406, 406];
+const BASE_REFERENCIA = 406;
+
+/** Altura que o copo tem que ter na tela. Tudo o mais sai daqui. */
+const ALTURA_DO_COPO = 150;
+const ESCALA = ALTURA_DO_COPO / 253;
+
+const LARGURA = Math.round(280 * ESCALA);
+const ALTURA = Math.round(460 * ESCALA);
+
+/** Distância do topo da caixa até a base do copo. É por aqui que ele encosta. */
+const BASE = Math.round(BASE_REFERENCIA * ESCALA);
 
 /** Quanto scroll a queda inteira consome. Queda curta demais vira pulinho. */
 const PERCURSO = 1100;
@@ -52,10 +74,10 @@ export function Chamada() {
       const p = palco.getBoundingClientRect();
       // Apoiado no título: a base do copo encosta exatamente no topo do texto,
       // sem cobrir letra nenhuma.
-      inicioY = titulo.getBoundingClientRect().top - p.top - ALTURA;
+      inicioY = titulo.getBoundingClientRect().top - p.top - BASE;
       // Pousa ENCOSTANDO na borda de cima do botão, sem invadir: as duas
       // metades são largas e cobririam o texto "Ver experimentos".
-      fimY = botao.getBoundingClientRect().top - p.top - ALTURA;
+      fimY = botao.getBoundingClientRect().top - p.top - BASE;
       posicionar();
     };
 
@@ -177,7 +199,14 @@ export function Chamada() {
                 height={460}
                 priority={i === 0}
                 className="absolute inset-0 h-full w-full object-contain"
-                style={{ opacity: i === quadro ? 1 : 0 }}
+                style={{
+                  opacity: i === quadro ? 1 : 0,
+                  // Alinha a base de todos os quadros no mesmo lugar: o objeto
+                  // desce dentro da própria imagem ao longo da sequência.
+                  transform: `translateY(${
+                    (BASE_REFERENCIA - BASE_POR_QUADRO[i]) * ESCALA
+                  }px)`,
+                }}
               />
             ))}
           </div>
