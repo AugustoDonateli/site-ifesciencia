@@ -542,69 +542,83 @@ Três experimentos de mentira cadastrados (`lata-que-amassa`, `ovo-na-garrafa`,
 
 ---
 
-## 14. Objetos icônicos animados — a grande ideia pendente
+## 14. Objetos icônicos animados — PLANO FECHADO, execução marcada
 
-> Conversa longa, **nada construído ainda**. O Augusto considera isto uma das coisas
-> mais importantes do site: "vai quadruplicar o profissionalismo e a personalidade,
-> e passa storytelling".
+> Uma das partes mais importantes do site na visão do Augusto: "vai quadruplicar o
+> profissionalismo e a personalidade, e passa storytelling".
+> **Nada construído ainda. A execução ficou marcada para o dia seguinte a esta conversa.**
 
-### A ideia
-Objetos reais dos vídeos do Ifesciência animados conforme a pessoa rola a landing.
-Não são enfeites genéricos: são **os objetos dos experimentos**, com o movimento que
-já é a piada do vídeo.
+### O caminho — decidido pelo Augusto
 
-### Acervo com views (dado pelo Augusto)
+**Higgsfield, com os créditos dele.** Fluxo, em ordem:
 
-| Vídeo | Views | Objeto | Movimento possível |
-|---|---|---|---|
-| **Fogo com água** (do Pedro) | **17,3 M** | — | Ideia dele: cai sobre um texto e **abre em dois** |
-| NFT (do Augusto) | 7,2 M | nenhum | ❌ sem objeto |
-| **Coca-Cola Clear** | 4,7 M | garrafa | encher / esvaziar |
-| **Garrafa de Klein** | 3,6 M | garrafa | sendo enchida |
-| **Gelo transparente** | 2,7 M | gelo | derretendo |
-| **Bola do efeito Magnus** | 1,8 M | bola | trajetória curva |
-| **Chocolate holográfico** | 1,4 M | chocolate | sendo mordido |
-| Gravidade zero | 1,0 M | nenhum | ❌ |
-| **Copo Stanley** | viral | copo | **cai e se parte ao meio** |
-| Institucional | — | nenhum | ❌ |
+1. **Gerar a imagem inicial** do objeto — já **nas cores da paleta do site**, para nascer
+   combinando em vez de ser corrigido depois.
+2. **Animar essa imagem** (imagem → vídeo) com o movimento do experimento.
+3. **Extrair os quadros com ffmpeg.**
+4. **Montar no site**, ligado ao scroll.
 
-### Decisões já tomadas
+*(Registro honesto: eu insisti em alternativas — extrair quadros dos vídeos originais,
+fotografar os objetos, testar com silhueta em SVG. O Augusto derrubou as três com razão:
+os vídeos têm legenda queimada, a queda do copo nunca foi filmada, e silhueta vetorial
+destruiria a qualidade do site. **O caminho é IA e está decidido — não reabrir.**)*
 
-**Imagens: IA, não extração dos próprios vídeos.**
-Eu propus extrair quadros dos vídeos com ffmpeg; o Augusto derrubou com razão —
-os vídeos têm **legenda queimada**, então recortar em volta do texto quadro a quadro
-é trabalho absurdo. E a queda do copo **nunca foi filmada**, não há o que extrair.
+### Os três escolhidos
 
-**Método que decide se fica bom ou ruim:** para sequências, gerar **uma** imagem boa e
-passá-la por um modelo de **imagem→vídeo**, depois extrair os quadros. Nunca gerar 15
-imagens soltas — sairiam 15 objetos ligeiramente diferentes e a animação piscaria.
-Sempre pedir **fundo chapado** (verde ou branco liso), que é trivial de remover.
-Ferramenta cogitada: Higgsfield, com créditos do Augusto.
+O critério: o objeto aparece com ~180px. Nesse tamanho, movimento sutil some e detalhe
+fino vira borrão.
 
-**❌ Silhuetas em SVG como teste — descartado pelo Augusto.** Ele quer objeto real desde
-o primeiro teste; desenho vetorial "perderia toda a qualidade do site".
+| Objeto | Views | Movimento |
+|---|---|---|
+| **Bola do efeito Magnus** | 1,8 M | atravessa em curva |
+| **Coca-Cola Clear** | 4,7 M | garrafa enchendo, devagar |
+| **Copo Stanley** | viral | cai e se parte ao meio — o clímax |
 
-**Tematização:** os objetos precisam conversar com a paleta (ex.: copo Stanley verde).
-O que unifica não é a origem da imagem e sim o **tratamento**: fundo removido, sombra
-no tom do creme, ajuste de cor puxando para o verde. Vale igual para foto e para
-imagem gerada.
+### Os descartados, com motivo (não reabrir sem motivo novo)
+- **Gelo derretendo** (2,7 M) — lento e sutil demais; em 180px vira mancha.
+- **Garrafa de Klein** (3,6 M) — a graça é entender a topologia, e isso exige tamanho.
+- **Chocolate holográfico** (1,4 M) — o brilho iridescente é a primeira coisa que morre
+  ao encolher; sobra uma barra marrom.
+- **Fogo com água, do Pedro** (17,3 M) — dói deixar o maior de fora, mas a coreografia
+  (cair e abrir em dois) é **a mesma do Stanley**. Seria repetir o truque.
+- **NFT** (7,2 M), **gravidade zero** (1,0 M), **institucional** — não têm objeto.
 
-### Regras para não poluir (preocupação central do Augusto)
-- **Os objetos moram nas margens, não no fluxo do conteúdo.** Container é 1240px; em tela
-  de 1600 sobram ~180px de cada lado, hoje vazios. Eles vivem ali e não empurram nada,
-  então o espaçamento atual do site continua intacto.
-- **No máximo um objeto por seção.** Nunca dois na mesma tela.
-- **Três ou quatro na landing inteira.** Mais que isso vira circo.
+### Onde cada um vai — aprovado pelo Augusto
 
-### Custo real, por tipo
-- **Uma imagem só, movimento por código** (barato): bola do Magnus (trajetória curva),
-  garrafa enchendo (máscara subindo). Sem risco de inconsistência.
-- **Sequência de quadros** (caro): gelo derretendo (~10 quadros bastam, movimento lento),
-  chocolate mordido, e o copo que cai e parte ao meio — o mais caro e o mais impressionante.
+Regra: **objeto só entra em seção que ainda não tem mecânica própria.**
 
-### Próximo passo combinado
-1. Augusto tira **3 fotos de celular** dos objetos reais (copo, bola, garrafa) em fundo
-   branco. Fundo removido depois em ferramenta grátis.
-2. Eu monto o **sistema de posicionamento e animação nas margens**, ligado ao scroll.
-3. A gente avalia com objeto de verdade se polui ou se fica excelente.
-4. Só então gastar crédito de IA no copo que cai e quebra — o último, não o primeiro.
+| Seção | Objeto |
+|---|---|
+| **Hero** | **nenhum** — já tem cascata do título, máquina de escrever e botão magnético |
+| **O projeto** | **Coca Clear enchendo** — seção longa, movimento lento acompanha a leitura |
+| **Alcance** | **bola do Magnus** — seção curta, movimento rápido |
+| **A equipe** | **nenhum** — a galeria já prende a tela |
+| **Chamada pro catálogo** | **copo Stanley cai e parte ao meio** — o clímax; o copo se abre e revela o botão |
+
+⚠️ O copo na chamada final **desfaz a decisão anterior** de aquele ser o único ponto parado
+do site. A página passa a terminar em movimento. Se perder força, mover o copo.
+
+### A exceção da bola (pedido do Augusto)
+Os objetos moram nas margens — **menos a bola**. Ela **atravessa por cima do texto**,
+sobreposta, pra dar a sensação de estar mesmo passando por cima. É o único objeto que
+entra na área de conteúdo, e faz sentido justamente porque uma bola com efeito Magnus
+curva para onde você não esperava. Cuidado: ela não pode deixar o texto ilegível —
+passagem rápida, objeto pequeno.
+
+### Configuração de geração
+**Resolução alta, sem economia** — correção do Augusto sobre a minha sugestão de 480p:
+o site está caprichado e imagem de baixa qualidade estragaria tudo.
+
+- Modelo de vídeo: **Seedance 2.0** · `mode: std` · `resolution: 1080p`
+- `generate_audio: false` — áudio é inútil aqui e só encarece
+- `duration: 4–5s` — já rende quase 100 quadros, e só precisamos de 12 a 20
+- Proporção conforme o objeto (garrafa e copo em 9:16; bola pode ser 1:1)
+- **Fundo chapado** (verde ou branco liso) — recorte vira trivial
+- **Enquadrar o objeto ocupando quase todo o quadro.** Isto importa tanto quanto a
+  resolução: se o objeto ocupa 1/4 do quadro, um vídeo 1080p entrega um objeto de ~500px.
+
+### Créditos
+**70 créditos, plano basic.** O preço por geração só aparece na hora, então:
+**fazer um objeto inteiro primeiro, do começo ao fim**, medir o custo real e só então
+decidir se os 70 cobrem os três.
+Começar pela **bola do Magnus** — a mais simples de gerar e a mais fácil de julgar.
