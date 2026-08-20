@@ -28,6 +28,12 @@ export function CatalogoLista({
   const gradeRef = useRef<HTMLDivElement>(null);
   const reduzido = usarMovimentoReduzido();
 
+  const contagem = useMemo(() => {
+    const c: Record<string, number> = {};
+    for (const e of experimentos) c[e.area] = (c[e.area] ?? 0) + 1;
+    return c;
+  }, [experimentos]);
+
   const lista = useMemo(
     () => (area ? experimentos.filter((e) => e.area === area) : experimentos),
     [area, experimentos],
@@ -65,33 +71,51 @@ export function CatalogoLista({
     return () => animacoes.forEach((a) => a.cancel());
   }, [lista, reduzido]);
 
-  const Botao = ({
-    valor,
-    rotulo,
-  }: {
-    valor: Area | null;
-    rotulo: string;
-  }) => {
+  /**
+   * A grade se adapta à quantidade. Três colunas com dois experimentos deixa
+   * um vazio enorme à direita e a página parece quebrada — então com poucos
+   * itens os cartões crescem e ocupam a largura.
+   */
+  const colunas =
+    lista.length <= 2
+      ? "sm:grid-cols-2"
+      : "sm:grid-cols-2 lg:grid-cols-3";
+
+  const Botao = ({ valor, rotulo }: { valor: Area | null; rotulo: string }) => {
     const ativo = area === valor;
+    const quantos = valor ? (contagem[valor] ?? 0) : experimentos.length;
+    // Área sem nada publicado não vira botão clicável que leva a lugar nenhum.
+    const vazio = quantos === 0;
+
     return (
       <button
         type="button"
-        onClick={() => setArea(valor)}
+        onClick={() => !vazio && setArea(valor)}
+        disabled={vazio}
         aria-pressed={ativo}
         className={`rounded-full border px-5 py-2 text-sm transition-colors ${
           ativo
             ? "border-verde bg-verde text-white"
-            : "border-borda text-tinta-2 hover:border-tinta-3 hover:text-tinta"
+            : vazio
+              ? "cursor-not-allowed border-borda text-tinta-3 opacity-50"
+              : "border-borda text-tinta-2 hover:border-tinta-3 hover:text-tinta"
         }`}
       >
         {rotulo}
+        <span
+          className={`ml-2 font-mono text-xs ${
+            ativo ? "text-white/70" : "text-tinta-3"
+          }`}
+        >
+          {quantos}
+        </span>
       </button>
     );
   };
 
   return (
     <>
-      <div className="mb-12 flex flex-wrap gap-2">
+      <div className="mb-12 flex flex-wrap items-center gap-2">
         <Botao valor={null} rotulo="Todos" />
         {AREAS.map((a) => (
           <Botao key={a} valor={a} rotulo={NOME_AREA[a]} />
@@ -100,14 +124,10 @@ export function CatalogoLista({
 
       {lista.length === 0 ? (
         <p className="border-t border-borda pt-8 text-tinta-2">
-          Nenhum experimento de {area ? NOME_AREA[area].toLowerCase() : "essa área"}{" "}
-          publicado ainda. Em breve.
+          Nenhum experimento publicado nessa área ainda. Em breve.
         </p>
       ) : (
-        <div
-          ref={gradeRef}
-          className="grid gap-x-8 gap-y-12 sm:grid-cols-2 lg:grid-cols-3"
-        >
+        <div ref={gradeRef} className={`grid gap-6 ${colunas} lg:gap-8`}>
           {lista.map((item) => (
             <CartaoExperimento key={item.id} item={item} />
           ))}

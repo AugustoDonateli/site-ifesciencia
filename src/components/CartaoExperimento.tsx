@@ -22,12 +22,20 @@ export type ItemCatalogo = {
 };
 
 /**
- * O título manda, a imagem apoia.
- *
- * Assim o cartão continua bonito mesmo sem capa — e o acervo é de Shorts,
- * onde capa boa é exceção, não regra. Quando a equipe envia um print, ele
- * entra em cima; quando não envia, o cartão é tipográfico e ninguém sente falta.
+ * Enquanto a equipe não envia capa, o lugar da imagem não pode ser um buraco
+ * cinza. Vira um bloco com o nome da área em tipografia grande e apagada —
+ * dá textura e identidade sem depender de foto nenhuma.
  */
+export function CapaVazia({ area }: { area: Area }) {
+  return (
+    <div className="flex h-full w-full items-center justify-center overflow-hidden bg-creme-2 p-4">
+      <span className="text-center font-titulo text-4xl font-bold leading-none text-borda sm:text-5xl">
+        {NOME_AREA[area]}
+      </span>
+    </div>
+  );
+}
+
 export function CartaoExperimento({ item }: { item: ItemCatalogo }) {
   const capa = capaDoExperimento(item);
 
@@ -40,42 +48,55 @@ export function CartaoExperimento({ item }: { item: ItemCatalogo }) {
   return (
     <Link
       href={`/experimentos/${item.slug}`}
-      className="group flex flex-col border-t border-borda pt-5 transition-colors hover:border-tinta-3"
+      className="group flex flex-col overflow-hidden rounded-xl border border-borda bg-creme transition-all duration-300 hover:-translate-y-1 hover:border-tinta-3 hover:shadow-[0_12px_28px_-18px_rgba(23,23,15,0.35)]"
     >
-      {capa ? (
-        <div className="mb-5 overflow-hidden rounded-lg bg-creme-2">
+      <div className="aspect-[4/3] w-full overflow-hidden">
+        {capa ? (
           <Image
             src={capa}
             alt=""
             width={800}
-            height={1000}
-            className="aspect-[4/5] w-full object-cover transition-transform duration-500 ease-out group-hover:scale-[1.03]"
+            height={600}
+            className="h-full w-full object-cover transition-transform duration-500 ease-out group-hover:scale-[1.03]"
           />
-        </div>
-      ) : null}
-
-      <div className="mb-3 flex flex-wrap items-center gap-2">
-        <span className="rounded-full bg-verde-claro px-3 py-1 text-xs font-medium text-verde-escuro">
-          {NOME_AREA[item.area]}
-        </span>
-        {item.pode_fazer_em_casa ? (
-          <span className="rounded-full bg-creme-2 px-3 py-1 text-xs text-tinta-2">
-            dá pra fazer em casa
-          </span>
-        ) : null}
+        ) : (
+          <CapaVazia area={item.area} />
+        )}
       </div>
 
-      <h3 className="font-titulo text-2xl font-bold transition-colors group-hover:text-verde-escuro sm:text-3xl">
-        {item.titulo}
-      </h3>
+      <div className="flex flex-1 flex-col p-6">
+        {/* O título vem primeiro: é o que o olho tem que pegar. As etiquetas
+            desceram pra não roubar a primeira leitura. */}
+        <h3 className="font-titulo text-2xl font-bold transition-colors group-hover:text-verde-escuro sm:text-3xl">
+          {item.titulo}
+        </h3>
 
-      {item.gancho ? (
-        <p className="mt-2 text-sm text-tinta-2">{item.gancho}</p>
-      ) : null}
+        {item.gancho ? (
+          <p className="mt-2 text-sm text-tinta-2">{item.gancho}</p>
+        ) : null}
 
-      <p className="mt-4 font-mono text-xs text-tinta-3">
-        {ficha.join(" · ")}
-      </p>
+        <div className="mt-5 flex flex-wrap items-center gap-2">
+          <span className="rounded-full bg-verde-claro px-3 py-1 text-xs font-medium text-verde-escuro">
+            {NOME_AREA[item.area]}
+          </span>
+          {item.pode_fazer_em_casa ? (
+            <span className="rounded-full bg-creme-2 px-3 py-1 text-xs text-tinta-2">
+              dá pra fazer em casa
+            </span>
+          ) : null}
+        </div>
+
+        <div className="mt-auto flex items-end justify-between gap-4 pt-6">
+          <p className="font-mono text-xs text-tinta-3">{ficha.join(" · ")}</p>
+          {/* Afordância de clique: sem isto o cartão parece só texto solto. */}
+          <span
+            aria-hidden="true"
+            className="shrink-0 text-lg text-tinta-3 transition-all duration-300 group-hover:translate-x-1 group-hover:text-verde"
+          >
+            →
+          </span>
+        </div>
+      </div>
     </Link>
   );
 }

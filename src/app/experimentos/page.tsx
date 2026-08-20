@@ -51,12 +51,6 @@ export default async function Experimentos({
               Cada vídeo do Ifesciência vira uma ficha com os materiais, o passo
               a passo e o que costuma dar errado. Sem cadastro e sem custo.
             </p>
-            {experimentos.length > 0 ? (
-              <p className="mt-4 font-mono text-xs text-tinta-3">
-                {experimentos.length}{" "}
-                {experimentos.length === 1 ? "experimento" : "experimentos"} no ar
-              </p>
-            ) : null}
           </header>
 
           <CatalogoLista
