@@ -1,4 +1,5 @@
 import { NumeroQueSobe } from "./NumeroQueSobe";
+import { BolaMagnus } from "./BolaMagnus";
 import { FaixaCorrendo } from "./FaixaCorrendo";
 import { formatarAlcance } from "@/lib/tipos";
 import type { Ajustes } from "@/lib/tipos";
@@ -15,14 +16,16 @@ export function Numeros({ ajustes }: { ajustes: Ajustes }) {
   const visualizacoes = formatarAlcance(ajustes.visualizacoes);
 
   return (
-    <section className="border-y border-borda bg-creme-2">
+    <section className="relative border-y border-borda bg-creme-2">
+      <BolaMagnus />
+
       <div className="mx-auto w-full max-w-[1240px] px-6 py-14">
         <p className="mb-10 font-mono text-xs uppercase tracking-[0.18em] text-tinta-3">
           Alcance
         </p>
 
         <div className="grid gap-10 sm:grid-cols-3">
-          <div>
+          <div data-numero>
             <NumeroQueSobe
               valor={seguidores.valor}
               sufixo={seguidores.sufixo}
@@ -34,7 +37,7 @@ export function Numeros({ ajustes }: { ajustes: Ajustes }) {
             </p>
           </div>
 
-          <div>
+          <div data-numero>
             <NumeroQueSobe
               valor={visualizacoes.valor}
               sufixo={visualizacoes.sufixo}
@@ -47,7 +50,7 @@ export function Numeros({ ajustes }: { ajustes: Ajustes }) {
           </div>
 
           {ajustes.destaque_valor ? (
-            <div>
+            <div data-numero>
               <p className="font-titulo text-5xl font-bold text-verde lg:text-6xl">
                 {ajustes.destaque_valor}
               </p>
