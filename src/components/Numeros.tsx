@@ -19,7 +19,10 @@ export function Numeros({ ajustes }: { ajustes: Ajustes }) {
     <section className="relative border-y border-borda bg-creme-2">
       <BolaMagnus />
 
-      <div className="mx-auto w-full max-w-[1240px] px-6 py-14">
+      {/* O recuo de cima é a pista de voo da bola: sem ele so existiam 110px
+          livres acima dos numeros, e a bola era obrigada a passar por cima
+          do texto. */}
+      <div className="mx-auto w-full max-w-[1240px] px-6 pb-14 pt-28 md:pt-44">
         <p className="mb-10 font-mono text-xs uppercase tracking-[0.18em] text-tinta-3">
           Alcance
         </p>
