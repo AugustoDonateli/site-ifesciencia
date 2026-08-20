@@ -714,3 +714,35 @@ tempos. Então:
    a essa altura já se sabe o custo real por geração e quanto sobra para insistir.
 
 **Total: 3 imagens + 2 vídeos**, mais tentativas. Orçamento: 70 créditos.
+
+### O que se decide na geração x o que se decide no ffmpeg
+
+Observação do Augusto, correta: **a quantidade de quadros é decisão do ffmpeg**, não da
+geração. O vídeo sai com todos os quadros e dá para reextrair quantas vezes quiser, de
+graça, sem gerar de novo.
+
+**Na geração — sem conserto depois:** visual do objeto, luz, enquadramento, fundo, câmera
+parada, o movimento em si, resolução (dá para reduzir depois, nunca aumentar).
+
+**No ffmpeg — reversível e grátis:** quantos quadros, qual trecho do clipe aproveitar,
+tamanho final de entrega.
+
+**Cadência decidida (poucos quadros, de propósito):** doze quadros lê como stop-motion —
+proposital, feito à mão. Sessenta lê como filmagem colada no site, que é o desencaixe que
+o Augusto temia. Menos quadros também é arquivo menor: estética e desempenho apontam para
+o mesmo lado.
+Ajustar por velocidade do movimento, não usar o mesmo número para todos:
+**garrafa ~10–12 quadros** (lento) · **copo ~20** (rápido; com 10 a queda vira teleporte).
+
+**Estilo decidido:** objeto **realista com luz de estúdio limpa** — não cartunesco e não
+cinematográfico. Cartunesco brigaria com as fotos reais da equipe que vão entrar no site;
+cinematográfico parece banco de imagem. O contraste "objeto real + cadência de stop-motion"
+é justamente o que máquina nenhuma faz por acidente.
+
+⚠️ **A exceção que vaza da cadência para a geração: borrão de movimento.**
+Se o modelo renderizar a queda com borrão — normal em movimento rápido — cada quadro
+extraído sai borrado, e em stop-motion vira sequência de manchas. **No prompt do copo,
+pedir queda com movimento nítido, sem borrão.**
+
+**Teste grátis combinado:** ao gerar o vídeo da garrafa, montar duas versões no site —
+uma com 12 quadros e outra com 30 — e comparar antes de decidir. Custo zero em créditos.
