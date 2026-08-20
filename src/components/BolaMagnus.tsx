@@ -110,11 +110,27 @@ export function BolaMagnus() {
         escala = 0.55 - 0.4 * Math.pow(q, 0.6);
       }
 
+      /**
+       * O giro.
+       *
+       * Sete voltas e meia na travessia, e não duas e meia como antes: bola
+       * de falta com efeito gira MUITO, e giro tímido lê como bola rolando.
+       *
+       * O expoente amarra o giro à velocidade aparente — ela roda rápido
+       * enquanto está perto e vai desacelerando conforme some na distância,
+       * que é o que a perspectiva faz de verdade.
+       *
+       * Anti-horário de propósito: é o mesmo sentido da curva e do ricochete
+       * para a esquerda, então o giro parece a CAUSA do desvio, não um
+       * enfeite girando por conta própria.
+       */
+      const giro = -2700 * Math.pow(t, 0.75);
+
       bola.style.opacity = "1";
       // A base da bola encosta no alvo, então o centro fica meio raio acima.
       bola.style.transform = `translate(${x}px, ${
         y - (TAMANHO * escala) / 2
-      }px) translate(-50%, -50%) rotate(${t * 900}deg) scale(${escala})`;
+      }px) translate(-50%, -50%) rotate(${giro}deg) scale(${escala})`;
 
       /**
        * O tranco no número. Curto e forte, como pancada — não um carinho
