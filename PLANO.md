@@ -142,7 +142,9 @@ Quando der, testar a versão leve (clipe curto próprio) e medir em celular frac
 
 ---
 
-## Etapa 7 — Ficha do experimento
+## Etapa 7 — Ficha do experimento ✅ CONCLUÍDA
+
+**Exemplo no ar:** https://site-ifesciencia.vercel.app/experimentos/lata-que-amassa
 
 **Objetivo:** a página mais importante do site.
 

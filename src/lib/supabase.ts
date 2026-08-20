@@ -39,3 +39,20 @@ export async function buscarExperimento(slug: string) {
   if (error) throw error;
   return data as Experimento | null;
 }
+
+/** Outros da mesma área, pra ficha terminar oferecendo um próximo passo. */
+export async function listarRelacionados(area: string, slugAtual: string) {
+  const { data, error } = await supabase
+    .from("experimentos")
+    .select(
+      "id, slug, titulo, gancho, area, capa_url, tempo_execucao_min, custo_centavos, dificuldade, pode_fazer_em_casa",
+    )
+    .eq("publicado", true)
+    .eq("area", area)
+    .neq("slug", slugAtual)
+    .order("ordem", { ascending: false })
+    .limit(3);
+
+  if (error) throw error;
+  return data;
+}
