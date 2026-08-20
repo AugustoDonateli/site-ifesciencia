@@ -764,3 +764,72 @@ extenso sozinho e a contagem animada continua tendo um número para animar.
 O painel mostra a prévia — "no site: 500 mil" — enquanto se digita.
 
 **Rede sem endereço não aparece** no rodapé, em vez de virar link quebrado.
+
+---
+
+## 17. Lições do primeiro objeto (o copo) — ler antes de gerar o próximo
+
+> Retrospectiva feita depois de o copo ficar pronto. Quase todos os erros
+> foram meus, e todos têm conserto. Este é o checklist para a garrafa e a bola.
+
+### Erros cometidos
+
+**1. O prompt não descreveu a SILHUETA.** Falou de material, cor, acabamento,
+enquadramento e fundo — e nada da forma. "Tumbler de aço com alça" é vago, e
+saiu um formato afunilado de garrafa. O Augusto queria o **copo americano
+grande: parede quase reta, boca larga, corpo encorpado.**
+
+**2. Pedi quatro tempos num clipe só** (balançar, cair, pousar, partir) e o
+modelo entregou um. Isso já estava escrito na seção 15 e eu não segui.
+
+**3. Gastei crédito numa queda que o código ia fazer de qualquer jeito.**
+Decidir antes o que o vídeo precisa entregar teria simplificado o prompt e
+aumentado a chance de acertar de primeira.
+
+**4. Não conferi o alinhamento dos quadros.** O objeto desce 42px dentro da
+própria imagem ao longo da sequência. Tratar os quadros como se ele estivesse
+parado fez o copo pousar num lugar e as metades aparecerem em outro.
+
+**5. Dimensionei pela imagem, não pelo objeto.** O copo ocupa pouco mais da
+metade do quadro; o resto é transparente. Resultado: objeto pequeno demais.
+
+**6. Escolhi o lugar pelo sentido, sem olhar a geometria.** A chamada final era
+narrativamente certa, mas era centralizada — não existia caminho livre para
+nada cair. Três tentativas até perceber. **Sentido não resolve se a geometria
+não permite.**
+
+**7. Medi contra o elemento errado.** As posições saíam do palco travado, mas
+quem posiciona o objeto é o bloco de texto. Duas rodadas perdidas nisso.
+
+### Checklist para os próximos objetos
+
+**Antes de gerar a imagem**
+- [ ] Descrever a **silhueta em palavras**, com proporções. Não só material e cor.
+- [ ] Cor da paleta, sem marca, sem texto, sem logo.
+- [ ] Fundo magenta chapado, sem chão, sem sombra projetada.
+- [ ] Enquadrar deixando espaço vazio **onde o movimento vai acontecer**.
+
+**Antes de gerar o vídeo**
+- [ ] Definir **UM único movimento** — o que só vídeo faz.
+- [ ] Tudo que código consegue fazer (queda, translação, rotação) fica com o código.
+- [ ] Câmera travada, uma tomada, luz constante, sem borrão de movimento.
+
+**Antes de montar no site**
+- [ ] **Medir a caixa do objeto em TODOS os quadros** e corrigir a deriva.
+- [ ] Dimensionar pela **altura do objeto**, nunca pela da imagem.
+- [ ] Medir posições contra o elemento que de fato posiciona o objeto
+      (o `offsetParent`), não contra o container mais próximo.
+
+**Antes de escolher o lugar**
+- [ ] Conferir se existe **corredor vertical livre** na seção.
+- [ ] Se não existir: ou muda a composição, ou muda o lugar — **antes** de gerar.
+- [ ] Confirmar que existe um elemento para o objeto **colidir** no fim.
+      Sem colisão o objeto vira adesivo, e aí não vale a pena.
+
+### O que deu certo e vale repetir
+- Fundo magenta chapado: recorte automático saiu limpo, sem franja.
+- Dividir o trabalho: **a IA faz o que só ela faz** (a quebra em duas metades
+  com o interior oco), **o código faz o resto** (queda, ritmo, colisão).
+- **O elemento do site reagir ao impacto** — o botão achatando na batida foi o
+  que finalmente fez o objeto parecer parte da página.
+- 13 quadros WebP pesaram 152 KB no total.
