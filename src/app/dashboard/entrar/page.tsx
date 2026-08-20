@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { criarClienteNavegador } from "@/lib/supabase-navegador";
 
 /**
@@ -15,6 +15,13 @@ export default function Entrar() {
   );
   const [erro, setErro] = useState<string | null>(null);
 
+  // O link do e-mail volta com o motivo quando falha, e sem isto a pessoa
+  // ficaria olhando um formulário em branco sem saber o que aconteceu.
+  useEffect(() => {
+    const motivo = new URLSearchParams(window.location.search).get("erro");
+    if (motivo) setErro(motivo);
+  }, []);
+
   const enviar = async (e: React.FormEvent) => {
     e.preventDefault();
     setEstado("enviando");
@@ -24,7 +31,7 @@ export default function Entrar() {
     const { error } = await supabase.auth.signInWithOtp({
       email: email.trim(),
       options: {
-        emailRedirectTo: `${window.location.origin}/dashboard`,
+        emailRedirectTo: `${window.location.origin}/auth/confirmar`,
       },
     });
 
