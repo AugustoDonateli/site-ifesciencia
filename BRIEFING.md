@@ -539,3 +539,72 @@ em `public` elas virariam rota acessível de fora. Zero alertas de segurança no
 Três experimentos de mentira cadastrados (`lata-que-amassa`, `ovo-na-garrafa`,
 `repolho-que-muda-de-cor`), sendo um deles rascunho de propósito, pra testar a diferença.
 **São descartáveis** — apagar quando os de verdade entrarem.
+
+---
+
+## 14. Objetos icônicos animados — a grande ideia pendente
+
+> Conversa longa, **nada construído ainda**. O Augusto considera isto uma das coisas
+> mais importantes do site: "vai quadruplicar o profissionalismo e a personalidade,
+> e passa storytelling".
+
+### A ideia
+Objetos reais dos vídeos do Ifesciência animados conforme a pessoa rola a landing.
+Não são enfeites genéricos: são **os objetos dos experimentos**, com o movimento que
+já é a piada do vídeo.
+
+### Acervo com views (dado pelo Augusto)
+
+| Vídeo | Views | Objeto | Movimento possível |
+|---|---|---|---|
+| **Fogo com água** (do Pedro) | **17,3 M** | — | Ideia dele: cai sobre um texto e **abre em dois** |
+| NFT (do Augusto) | 7,2 M | nenhum | ❌ sem objeto |
+| **Coca-Cola Clear** | 4,7 M | garrafa | encher / esvaziar |
+| **Garrafa de Klein** | 3,6 M | garrafa | sendo enchida |
+| **Gelo transparente** | 2,7 M | gelo | derretendo |
+| **Bola do efeito Magnus** | 1,8 M | bola | trajetória curva |
+| **Chocolate holográfico** | 1,4 M | chocolate | sendo mordido |
+| Gravidade zero | 1,0 M | nenhum | ❌ |
+| **Copo Stanley** | viral | copo | **cai e se parte ao meio** |
+| Institucional | — | nenhum | ❌ |
+
+### Decisões já tomadas
+
+**Imagens: IA, não extração dos próprios vídeos.**
+Eu propus extrair quadros dos vídeos com ffmpeg; o Augusto derrubou com razão —
+os vídeos têm **legenda queimada**, então recortar em volta do texto quadro a quadro
+é trabalho absurdo. E a queda do copo **nunca foi filmada**, não há o que extrair.
+
+**Método que decide se fica bom ou ruim:** para sequências, gerar **uma** imagem boa e
+passá-la por um modelo de **imagem→vídeo**, depois extrair os quadros. Nunca gerar 15
+imagens soltas — sairiam 15 objetos ligeiramente diferentes e a animação piscaria.
+Sempre pedir **fundo chapado** (verde ou branco liso), que é trivial de remover.
+Ferramenta cogitada: Higgsfield, com créditos do Augusto.
+
+**❌ Silhuetas em SVG como teste — descartado pelo Augusto.** Ele quer objeto real desde
+o primeiro teste; desenho vetorial "perderia toda a qualidade do site".
+
+**Tematização:** os objetos precisam conversar com a paleta (ex.: copo Stanley verde).
+O que unifica não é a origem da imagem e sim o **tratamento**: fundo removido, sombra
+no tom do creme, ajuste de cor puxando para o verde. Vale igual para foto e para
+imagem gerada.
+
+### Regras para não poluir (preocupação central do Augusto)
+- **Os objetos moram nas margens, não no fluxo do conteúdo.** Container é 1240px; em tela
+  de 1600 sobram ~180px de cada lado, hoje vazios. Eles vivem ali e não empurram nada,
+  então o espaçamento atual do site continua intacto.
+- **No máximo um objeto por seção.** Nunca dois na mesma tela.
+- **Três ou quatro na landing inteira.** Mais que isso vira circo.
+
+### Custo real, por tipo
+- **Uma imagem só, movimento por código** (barato): bola do Magnus (trajetória curva),
+  garrafa enchendo (máscara subindo). Sem risco de inconsistência.
+- **Sequência de quadros** (caro): gelo derretendo (~10 quadros bastam, movimento lento),
+  chocolate mordido, e o copo que cai e parte ao meio — o mais caro e o mais impressionante.
+
+### Próximo passo combinado
+1. Augusto tira **3 fotos de celular** dos objetos reais (copo, bola, garrafa) em fundo
+   branco. Fundo removido depois em ferramenta grátis.
+2. Eu monto o **sistema de posicionamento e animação nas margens**, ligado ao scroll.
+3. A gente avalia com objeto de verdade se polui ou se fica excelente.
+4. Só então gastar crédito de IA no copo que cai e quebra — o último, não o primeiro.
