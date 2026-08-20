@@ -160,7 +160,9 @@ experimento inteiro sem sair da página.
 
 ---
 
-## Etapa 8 — Dashboard
+## Etapa 8 — Dashboard ✅ CONCLUÍDA
+
+**No ar:** https://site-ifesciencia.vercel.app/dashboard
 
 **Objetivo:** vocês publicarem sozinhos, para sempre.
 
