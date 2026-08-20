@@ -108,8 +108,14 @@ export function BolaMagnus() {
         <Image
           src="/objetos/bola.webp"
           alt=""
-          width={TAMANHO * 2}
-          height={TAMANHO * 2}
+          width={200}
+          height={200}
+          // Ja sai do tamanho e do formato certos: passar pelo otimizador do
+          // Next so re-comprime e adiciona um ponto de falha.
+          unoptimized
+          // Carrega junto com a pagina: objeto de scroll nao pode aparecer
+          // atrasado, e sao 8,7 KB.
+          loading="eager"
           onError={(e) => {
             const alvo = e.currentTarget.parentElement;
             if (alvo) alvo.style.display = "none";
