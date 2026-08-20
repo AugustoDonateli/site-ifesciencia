@@ -502,3 +502,40 @@ O trabalho que é meu: física, colisão, arremesso e o plano B pra celular frac
 - Como manter os números atualizados sem API (ver discussão: campo na dashboard).
 - Onde a física mora: no hero ou como entrada do catálogo.
 - Se clicar num objeto da física leva ao experimento daquele objeto.
+
+---
+
+## 13. Banco de dados (etapa 2)
+
+**Projeto Supabase:** `ifesciencia` · `suocgfbfvcvmsgqypand` · região **São Paulo**
+(a mais perto dos usuários) · custo **R$ 0/mês**.
+
+### Tabelas
+- **`experimentos`** — todos os campos da D19, separados entre obrigatórios e opcionais.
+- **`membros`** — quem pode escrever. A equipe troca todo ano letivo (D3): quando alguém
+  se forma, apaga-se a linha e o acesso acaba.
+
+### Decisões de estrutura
+- **Materiais e passos ficam em `jsonb`, não em tabelas separadas.** Ninguém vai perguntar
+  "quais experimentos usam vinagre", e no formulário da dashboard salvar a lista inteira de
+  uma vez é muito mais simples do que costurar três tabelas.
+- **Guarda-se o id do vídeo, não a URL.** O formato de URL do YouTube muda; o id não.
+  A partir dele monta-se o player e a miniatura.
+- **Dinheiro em centavos, inteiro.** Número quebrado com dinheiro sempre dá errado.
+- **`pdf_url` e `capa_url` vazios são o caso normal:** sem eles, o site gera o PDF (D15)
+  e usa a miniatura do YouTube.
+
+### Regras de acesso — conferidas de fora, com a chave pública
+| Teste | Resultado |
+|---|---|
+| Ler experimentos | só os **publicados** aparecem; rascunho fica invisível |
+| Ler a lista de membros | vem vazia |
+| Escrever qualquer coisa | **bloqueado** |
+
+As funções auxiliares ficam no schema `private`, que a API do Supabase não publica —
+em `public` elas virariam rota acessível de fora. Zero alertas de segurança no painel.
+
+### Dados de teste
+Três experimentos de mentira cadastrados (`lata-que-amassa`, `ovo-na-garrafa`,
+`repolho-que-muda-de-cor`), sendo um deles rascunho de propósito, pra testar a diferença.
+**São descartáveis** — apagar quando os de verdade entrarem.

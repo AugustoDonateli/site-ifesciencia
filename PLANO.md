@@ -56,7 +56,9 @@ Todo `git push` na branch `main` atualiza o site sozinho.
 
 ---
 
-## Etapa 2 — Banco de dados
+## Etapa 2 — Banco de dados ✅ CONCLUÍDA
+
+**Projeto Supabase:** `ifesciencia` (`suocgfbfvcvmsgqypand`), região São Paulo.
 
 **Objetivo:** a estrutura que guarda os experimentos.
 
