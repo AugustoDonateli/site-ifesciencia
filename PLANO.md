@@ -122,7 +122,13 @@ teste que vale.
 
 ---
 
-## Etapa 6 — Catálogo
+## Etapa 6 — Catálogo ✅ CONCLUÍDA
+
+**No ar:** https://site-ifesciencia.vercel.app/experimentos
+
+**📌 Anotado pra testar depois:** prévia em vídeo ao passar o mouse. Ficou de fora por
+enquanto — cada cartão precisaria carregar um player inteiro do YouTube e isso pesa muito.
+Quando der, testar a versão leve (clipe curto próprio) e medir em celular fraco.
 
 **Objetivo:** a lista de experimentos, lendo do banco.
 

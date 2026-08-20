@@ -70,10 +70,14 @@ export function formatarCusto(centavos: number | null) {
   });
 }
 
-/** A capa própria manda; sem ela, usa a miniatura do YouTube. */
-export function capaDoExperimento(e: {
-  capa_url: string | null;
-  youtube_id: string;
-}) {
-  return e.capa_url ?? `https://i.ytimg.com/vi/${e.youtube_id}/hqdefault.jpg`;
+/**
+ * A capa é a que a equipe enviar — e só ela.
+ *
+ * A miniatura automática do YouTube foi descartada de propósito: o acervo é
+ * todo de Shorts, e pra vídeo vertical o YouTube devolve a imagem deitada com
+ * tarja preta dos lados. Capa ruim estraga a grade inteira. Sem capa própria,
+ * o cartão vira tipográfico, que é bonito por conta própria.
+ */
+export function capaDoExperimento(e: { capa_url: string | null }) {
+  return e.capa_url;
 }

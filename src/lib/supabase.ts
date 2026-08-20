@@ -18,7 +18,7 @@ export async function listarExperimentos() {
   const { data, error } = await supabase
     .from("experimentos")
     .select(
-      "id, slug, titulo, gancho, area, nivel, youtube_id, capa_url, tempo_execucao_min, custo_centavos, dificuldade",
+      "id, slug, titulo, gancho, area, nivel, capa_url, tempo_execucao_min, custo_centavos, dificuldade, pode_fazer_em_casa",
     )
     .eq("publicado", true)
     .order("ordem", { ascending: false })
