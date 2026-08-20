@@ -14,7 +14,7 @@ export default async function Painel() {
   // público, não o painel.
   const { data } = await supabase
     .from("experimentos")
-    .select("id, slug, titulo, area, publicado, ordem")
+    .select("id, slug, titulo, area, publicado, ordem, capa_url, atualizado_em")
     .order("ordem", { ascending: false })
     .order("criado_em", { ascending: false });
 
