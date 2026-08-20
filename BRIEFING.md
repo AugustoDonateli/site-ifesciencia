@@ -622,3 +622,95 @@ o site está caprichado e imagem de baixa qualidade estragaria tudo.
 **fazer um objeto inteiro primeiro, do começo ao fim**, medir o custo real e só então
 decidir se os 70 cobrem os três.
 Começar pela **bola do Magnus** — a mais simples de gerar e a mais fácil de julgar.
+
+---
+
+## 15. Coreografia e prompts — pronto para gerar
+
+> Detalhamento fechado antes de gastar crédito. Erro aqui desperdiça crédito e tempo.
+
+### As sete travas — valem para TODO prompt
+
+1. **Câmera absolutamente parada.** Se a câmera mexe, o objeto se desloca no quadro e,
+   depois do recorte de fundo, treme na tela. É a causa nº 1 de material inutilizável.
+2. **Fundo de uma cor só, chapado, sem chão e sem sombra projetada.** Sombra no chão vem
+   junto no recorte e vira mancha cinza. A sombra entra depois, em código.
+3. **Objeto inteiro no quadro do primeiro ao último instante.** Saiu pela borda, aqueles
+   quadros viram lixo.
+4. **Uma tomada só.** Sem corte, sem zoom, sem transição.
+5. **Luz constante.** Variação vira piscada quando os quadros passam.
+6. **O movimento ocupa o clipe inteiro**, não acontece no último meio segundo.
+7. **Sem texto, sem logo, sem marca.**
+
+### ⚠️ Marca registrada
+**Stanley e Coca-Cola são marcas.** Num site institucional do Ifes financiado pela Fapes,
+gerar o logo delas é problema desnecessário — e de graça de evitar.
+Pedir **copo térmico genérico** e **garrafa de refrigerante genérica**, ambos no verde da
+paleta. Fica melhor: combinam com o site em vez de trazer a identidade de outra empresa.
+
+### Divisão de trabalho
+**A IA faz o objeto; o código faz o movimento — menos quando o movimento muda a forma
+do objeto.** Vantagem prática: se a pessoa rolar rápido, código continua coerente,
+enquanto quadros presos ao scroll teleportam.
+
+---
+
+### 1. Bola do efeito Magnus — só imagem, sem vídeo
+
+**Ativo:** 1 imagem. Bola verde, centralizada, fundo chapado.
+**Movimento:** feito em código — atravessa **por cima do texto** numa curva, girando.
+**Por quê sem vídeo:** a trajetória é o efeito, e trajetória é trivial em código. Se a
+rotação ficar falsa, aí sim gerar um giro curto em loop — mas testar de graça primeiro.
+**Scroll:** seção "Alcance". Progresso 0→1 = a bola cruza da esquerda para a direita,
+subindo e curvando na descida.
+
+### 2. Garrafa enchendo — imagem + vídeo
+
+Precisa de quadros: o que muda é o líquido dentro do vidro, e isso código não faz.
+
+**Prompt:** garrafa de vidro transparente, verde-clara, **imóvel**, centralizada, fundo
+chapado. O líquido sobe do fundo até o topo, devagar. **Sem mão, sem jato entrando por
+cima** — o nível simplesmente sobe. Câmera travada.
+**Scroll:** seção "O projeto" (longa, texto preso). Progresso 0→1 = primeiro ao último
+quadro. A garrafa enche no ritmo da leitura.
+
+### 3. Copo que cai e parte ao meio — imagem + vídeo
+
+**Decisão do Augusto: vídeo, não código.** Com razão — metade de copo caindo em código
+seriam dois retângulos girando, sem queda em três dimensões e sem revelar o interior.
+
+**O vídeo cobre só o que só vídeo consegue.** A descrição original tinha quatro tempos
+(balançar, cair, rolar, partir) e modelo de vídeo perde o fio em instrução de vários
+tempos. Então:
+- **O balanço fica em código**, usando a própria imagem inicial, antes do vídeo tocar.
+- **O vídeo começa no instante do tombo** e termina com as metades paradas. Dois tempos.
+- A primeira imagem do vídeo é a imagem que estava balançando → passagem invisível.
+
+**Três detalhes que precisam estar no prompt:**
+- **Corte limpo, não estilhaçado.** É copo térmico de metal, e no vídeo do Ifesciência ele
+  foi **serrado ao meio**. Se estilhaçar, perde a referência.
+- **As metades param mostrando o interior oco.** É o ponto do experimento — o vácuo entre
+  as paredes. De boca pra baixo, a animação perde o que deveria contar.
+- **A queda é para o lado.** Caindo para a câmera ele cresce e desfoca; para trás, some.
+  Tombo lateral mantém plano e tamanho.
+
+**Scroll:** seção da chamada final. 0→60% balança e cai · 60% toca e parte ·
+60→100% as metades se afastam e o botão aparece.
+
+---
+
+### Produção
+- Gerar em **1080p**, entregar no site **redimensionado para 2× o tamanho de exibição**
+  (~400–500px). Vinte quadros em 1080p passariam de 2 MB e a professora com 4G pagaria
+  por isso sem ver diferença. **Gera grande, entrega do tamanho certo.**
+- Vídeo: Seedance 2.0 · `mode: std` · `1080p` · `generate_audio: false` · 4–5s.
+- Enquadrar o objeto ocupando quase todo o quadro.
+
+### Ordem de execução (protege o crédito)
+1. **Bola** — 1 imagem. Resultado na tela no mesmo dia; serve para julgar se objeto gerado
+   combina com o site antes de gastar no resto.
+2. **Garrafa** — 1 imagem + 1 vídeo de movimento simples, de um tempo só.
+3. **Copo** — por último. É o mais caro e o mais provável de exigir 2 ou 3 tentativas;
+   a essa altura já se sabe o custo real por geração e quanto sobra para insistir.
+
+**Total: 3 imagens + 2 vídeos**, mais tentativas. Orçamento: 70 créditos.
