@@ -81,3 +81,42 @@ export function formatarCusto(centavos: number | null) {
 export function capaDoExperimento(e: { capa_url: string | null }) {
   return e.capa_url;
 }
+
+export type Ajustes = {
+  seguidores: number;
+  visualizacoes: number;
+  destaque_valor: string;
+  destaque_rotulo: string;
+  nota: string | null;
+  imprensa: string[];
+  instagram_url: string | null;
+  youtube_url: string | null;
+  tiktok_url: string | null;
+};
+
+/**
+ * 500000 vira "500 mil", 13000000 vira "13 milhões".
+ *
+ * A equipe digita o número inteiro de verdade no painel; quem escreve por
+ * extenso é o site. Assim ninguém precisa acertar a grafia, e a contagem
+ * animada continua funcionando porque sobra um número para animar.
+ */
+export function formatarAlcance(n: number): {
+  valor: number;
+  decimais: number;
+  sufixo: string;
+} {
+  if (n >= 1_000_000) {
+    const v = n / 1_000_000;
+    return {
+      valor: v,
+      decimais: Number.isInteger(v) ? 0 : 1,
+      sufixo: v === 1 ? " milhão" : " milhões",
+    };
+  }
+  if (n >= 1_000) {
+    const v = n / 1_000;
+    return { valor: v, decimais: Number.isInteger(v) ? 0 : 1, sufixo: " mil" };
+  }
+  return { valor: n, decimais: 0, sufixo: "" };
+}

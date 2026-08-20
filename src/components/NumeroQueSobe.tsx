@@ -13,11 +13,13 @@ import { usarMovimentoReduzido } from "@/lib/usarMovimentoReduzido";
 export function NumeroQueSobe({
   valor,
   sufixo = "",
+  decimais = 0,
   animar = true,
   className = "",
 }: {
   valor: number;
   sufixo?: string;
+  decimais?: number;
   animar?: boolean;
   className?: string;
 }) {
@@ -46,7 +48,8 @@ export function NumeroQueSobe({
           const p = Math.min((agora - inicio) / duracao, 1);
           // desacelera no fim, como coisa pesada parando
           const suave = 1 - Math.pow(1 - p, 3);
-          setAtual(Math.round(valor * suave));
+          const f = Math.pow(10, decimais);
+          setAtual(Math.round(valor * suave * f) / f);
           if (p < 1) requestAnimationFrame(passo);
         };
 
@@ -57,11 +60,14 @@ export function NumeroQueSobe({
 
     observador.observe(el);
     return () => observador.disconnect();
-  }, [valor, animar, reduzido]);
+  }, [valor, animar, reduzido, decimais]);
 
   return (
     <p ref={ref} className={className}>
-      {atual.toLocaleString("pt-BR")}
+      {atual.toLocaleString("pt-BR", {
+        minimumFractionDigits: decimais,
+        maximumFractionDigits: decimais,
+      })}
       {sufixo}
     </p>
   );

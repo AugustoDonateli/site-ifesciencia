@@ -746,3 +746,21 @@ pedir queda com movimento nítido, sem borrão.**
 
 **Teste grátis combinado:** ao gerar o vídeo da garrafa, montar duas versões no site —
 uma com 12 quadros e outra com 30 — e comparar antes de decidir. Custo zero em créditos.
+
+---
+
+## 16. ✅ Números do site vêm do banco (não mais do código)
+
+Estavam escritos à mão em `Numeros.tsx`: envelheceriam em silêncio e corrigir
+exigiria um programador. Agora são a tabela `ajustes` (linha única) e a equipe
+edita em **/dashboard/ajustes**.
+
+**O que é editável:** seguidores · visualizações · terceiro número e seu rótulo ·
+a observação embaixo dos números · a lista da imprensa que corre na faixa ·
+os endereços de Instagram, YouTube e TikTok.
+
+**Guardados como número inteiro** (500000, não "500 mil"): o site escreve por
+extenso sozinho e a contagem animada continua tendo um número para animar.
+O painel mostra a prévia — "no site: 500 mil" — enquanto se digita.
+
+**Rede sem endereço não aparece** no rodapé, em vez de virar link quebrado.

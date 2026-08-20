@@ -3,7 +3,7 @@ import { notFound } from "next/navigation";
 import Image from "next/image";
 import type { Metadata } from "next";
 import { Menu } from "@/components/Menu";
-import { Rodape } from "@/components/Rodape";
+import { RodapeDoSite } from "@/components/RodapeDoSite";
 import { PlayerYoutube } from "@/components/PlayerYoutube";
 import { BarraProgresso } from "@/components/BarraProgresso";
 import { BotaoCompartilhar } from "@/components/BotaoCompartilhar";
@@ -301,7 +301,7 @@ export default async function Ficha({
           </p>
         </main>
       </div>
-      <Rodape />
+      <RodapeDoSite />
     </>
   );
 }

@@ -3,11 +3,7 @@
 import Link from "next/link";
 import { useEffect, useRef } from "react";
 
-const redes = [
-  { rotulo: "Instagram", href: "https://www.instagram.com/ifesciencia/" },
-  { rotulo: "YouTube", href: "#" },
-  { rotulo: "TikTok", href: "#" },
-];
+export type Rede = { rotulo: string; href: string };
 
 /**
  * O rodapé aparece por trás: a página desliza pra cima e revela ele,
@@ -17,7 +13,7 @@ const redes = [
  * navegador do Instagram, então lá ele é um rodapé normal — decisão
  * de propósito, não "desligado no celular".
  */
-export function Rodape() {
+export function Rodape({ redes }: { redes: Rede[] }) {
   const ref = useRef<HTMLElement>(null);
 
   useEffect(() => {

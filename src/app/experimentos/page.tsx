@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { Menu } from "@/components/Menu";
-import { Rodape } from "@/components/Rodape";
+import { RodapeDoSite } from "@/components/RodapeDoSite";
 import { CatalogoLista } from "@/components/CatalogoLista";
 import type { ItemCatalogo } from "@/components/CartaoExperimento";
 import { listarExperimentos } from "@/lib/supabase";
@@ -59,7 +59,7 @@ export default async function Experimentos({
           />
         </main>
       </div>
-      <Rodape />
+      <RodapeDoSite />
     </>
   );
 }

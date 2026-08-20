@@ -36,6 +36,12 @@ export default async function LayoutPainel({
               </span>
             </Link>
             <Link
+              href="/dashboard/ajustes"
+              className="text-sm text-tinta-2 transition-colors hover:text-tinta"
+            >
+              Números
+            </Link>
+            <Link
               href="/dashboard/equipe"
               className="text-sm text-tinta-2 transition-colors hover:text-tinta"
             >

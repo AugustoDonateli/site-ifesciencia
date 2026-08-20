@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { Menu } from "@/components/Menu";
-import { Rodape } from "@/components/Rodape";
+import { RodapeDoSite } from "@/components/RodapeDoSite";
 
 export default function NaoEncontrado() {
   return (
@@ -33,7 +33,7 @@ export default function NaoEncontrado() {
           </div>
         </main>
       </div>
-      <Rodape />
+      <RodapeDoSite />
     </>
   );
 }
