@@ -85,8 +85,8 @@ export function Hero() {
           <Image
             src="/hero.webp"
             alt="A equipe do Ifesciência reunida no campus do Ifes em Cachoeiro de Itapemirim"
-            width={1000}
-            height={1250}
+            width={1440}
+            height={1799}
             priority
             sizes="(max-width: 767px) 100vw, 480px"
             className="w-full rounded-xl object-cover"

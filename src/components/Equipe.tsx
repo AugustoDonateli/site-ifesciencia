@@ -16,12 +16,15 @@ type Pessoa = {
  * Fica fixa no código.
  *
  * O nome de cada um veio escrito na claquete da própria foto, então o que
- * falta confirmar com o Augusto é só o resto: sobrenome do Pedro, nome
- * completo e curso do Daniel, e se o Hilton continua na lista — ele aparece
- * na foto do hero mas não mandou retrato individual.
+ * falta confirmar com o Augusto é só o resto: sobrenome do Pedro, e nome
+ * completo, curso e ano do Daniel.
  */
 const equipe: Pessoa[] = [
-  { nome: "Hilton Moulin", curso: "Coordenação" },
+  {
+    nome: "Hilton Moulin",
+    curso: "Coordenação",
+    foto: "/equipe/hilton.webp",
+  },
   {
     nome: "Augusto Donateli",
     curso: "Informática",
@@ -61,17 +64,25 @@ const LENTIDAO = 1.2;
 
 function Cartao({ nome, curso, ano, foto }: Pessoa) {
   return (
-    /* O 0.8 acompanha a proporção 4:5 das fotos: é ele que mantém o cartão
-       inteiro dentro de 80vh. Com o 0.75 do enquadramento 3:4 antigo, a foto
-       passava da tela. */
-    <div className="w-[78vw] max-w-[300px] shrink-0 sm:w-[44vw] md:w-[min(calc((100vw-3rem)/2.4),calc(80vh*0.8))] md:max-w-none">
+    /* Três limites, e vence o menor.
+
+       O 0.8 acompanha a proporção 4:5 das fotos: é ele que mantém o cartão
+       inteiro dentro da tela. Com o 0.75 do enquadramento 3:4 antigo, a foto
+       passava da dobra.
+
+       O teto de 500px é o que decide em monitor grande, e existe por causa da
+       resolução: a menor foto do time tem 1122px de largura, então acima de
+       ~560px de exibição uma tela 2x já pede mais pixels do que a imagem tem e
+       o retrato começa a amaciar. Antes o cartão chegava a 660px e era
+       exatamente isso que se via. */
+    <div className="w-[78vw] max-w-[300px] shrink-0 sm:w-[44vw] md:w-[min(calc((100vw-3rem)/3),calc(70vh*0.8),500px)] md:max-w-none">
       {foto ? (
         <Image
           src={foto}
           alt={`${nome}, da equipe do Ifesciência`}
-          width={1120}
-          height={1400}
-          sizes="(max-width: 639px) 78vw, (max-width: 767px) 44vw, 580px"
+          width={1440}
+          height={1800}
+          sizes="(max-width: 639px) 78vw, (max-width: 767px) 44vw, 500px"
           className="w-full rounded-xl object-cover"
         />
       ) : (
