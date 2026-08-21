@@ -64,25 +64,17 @@ const LENTIDAO = 1.2;
 
 function Cartao({ nome, curso, ano, foto }: Pessoa) {
   return (
-    /* Três limites, e vence o menor.
-
-       O 0.8 acompanha a proporção 4:5 das fotos: é ele que mantém o cartão
-       inteiro dentro da tela. Com o 0.75 do enquadramento 3:4 antigo, a foto
-       passava da dobra.
-
-       O teto de 500px é o que decide em monitor grande, e existe por causa da
-       resolução: a menor foto do time tem 1122px de largura, então acima de
-       ~560px de exibição uma tela 2x já pede mais pixels do que a imagem tem e
-       o retrato começa a amaciar. Antes o cartão chegava a 660px e era
-       exatamente isso que se via. */
-    <div className="w-[78vw] max-w-[300px] shrink-0 sm:w-[44vw] md:w-[min(calc((100vw-3rem)/3),calc(70vh*0.8),500px)] md:max-w-none">
+    /* A largura vem de --larg, definida uma vez na seção: o recuo do palco
+       precisa da altura do cartão, e duas contas separadas sairiam do ar na
+       primeira vez que alguém mexesse numa delas. */
+    <div className="w-[78vw] max-w-[300px] shrink-0 sm:w-[44vw] md:w-[var(--larg)] md:max-w-none">
       {foto ? (
         <Image
           src={foto}
           alt={`${nome}, da equipe do Ifesciência`}
           width={1440}
           height={1800}
-          sizes="(max-width: 639px) 78vw, (max-width: 767px) 44vw, 500px"
+          sizes="(max-width: 639px) 78vw, (max-width: 767px) 44vw, 900px"
           className="w-full rounded-xl object-cover"
         />
       ) : (
@@ -216,27 +208,54 @@ export function Equipe() {
         </p>
       </div>
 
-      <section ref={secaoRef} className="relative" style={{ height: altura }}>
-        {/* Os cartões encostam no alto, não no meio.
+      {/* Todo o dimensionamento da galeria sai daqui.
 
-            Centralizado, o que sobra de espaço vira metade em cima e metade
-            embaixo — e essa sobra cresce junto com a altura do monitor. Numa
-            tela de 720px são 76px de cada lado e ninguém repara; numa de 1050
-            viram 200px, e aí o título já rolou pra fora e fica um vazio sem
-            explicação antes das fotos.
+          --teto existe por causa da resolução das fotos, e por isso segue o
+          DPR do monitor: num monitor comum um cartão de 900px pede 900px de
+          imagem e todas têm 1122 ou mais; numa tela 2x o mesmo cartão pediria
+          1800px, que nenhuma tem, e o retrato amacia. 640 é o limite lá.
 
-            Encostando no alto, a sobra vai toda pra baixo, que é onde ela não
-            incomoda: a página se lê de cima pra baixo.
+          --larg é o menor entre três limites: três cartões por tela, caber
+          inteiro na altura, e o teto. A conta da altura desconta o que está em
+          volta em vez de chutar uma fração — cada pixel de largura vira 1,25
+          de foto (proporção 4:5) mais 64px de nome e curso, e os 160px são os
+          recuos de cima e de baixo. A regra anterior era `70vh*0.8`, herdada
+          de quando a foto era 3:4, e numa tela de 1037px parava o cartão em
+          581 deixando 250px de branco que nada preenchia. */}
+      <section
+        ref={secaoRef}
+        className="relative [--teto:900px] [@media(min-resolution:2dppx)]:[--teto:640px]"
+        style={
+          {
+            height: altura,
+            "--larg":
+              "min(calc((100vw - 3rem) / 3), calc(80svh - 160px), var(--teto))",
+            "--alt": "calc(var(--larg) * 1.25 + 64px)",
+          } as React.CSSProperties
+        }
+      >
+        {/* O recuo de cima centraliza o cartão, mas com piso.
 
-            O recuo acompanha a tela, mas nunca desce dos 5rem — abaixo disso o
-            cartão passaria por baixo do menu, que tem 69px e fica grudado no
-            topo junto com o palco. */}
+            Centralizar de verdade (`items-center`) dava 2px de folga do menu
+            numa tela de 720px — o cartão passava por baixo dele. Encostar no
+            alto com recuo fixo resolvia isso e criava o problema oposto: a
+            sobra ia inteira pro rodapé da tela.
+
+            Com `max`, ele centraliza enquanto der e trava nos 5rem quando a
+            tela é baixa. O menu tem 69px e fica grudado no topo junto com o
+            palco, então esse piso é o que garante que um não cubra o outro. */}
         <div
           className={`flex overflow-hidden ${
-            preso
-              ? "sticky top-0 h-screen items-start pt-[max(5rem,10svh)] pb-6"
-              : "items-center py-12"
+            preso ? "sticky top-0 h-screen items-start pb-6" : "items-center py-12"
           }`}
+          style={
+            preso
+              ? {
+                  paddingTop:
+                    "max(5rem, calc((100svh - var(--alt)) / 2))",
+                }
+              : undefined
+          }
         >
           <div
             ref={trilhoRef}
