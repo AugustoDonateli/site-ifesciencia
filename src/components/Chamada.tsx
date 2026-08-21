@@ -81,7 +81,6 @@ const FIM = 1;
 export function Chamada() {
   const secaoRef = useRef<HTMLElement>(null);
   const blocoRef = useRef<HTMLDivElement>(null);
-  const tituloRef = useRef<HTMLHeadingElement>(null);
   const paragrafoRef = useRef<HTMLParagraphElement>(null);
   const botaoRef = useRef<HTMLAnchorElement>(null);
   const copoRef = useRef<HTMLDivElement>(null);
@@ -92,28 +91,32 @@ export function Chamada() {
     const secao = secaoRef.current;
     const bloco = blocoRef.current;
     const copo = copoRef.current;
-    const titulo = tituloRef.current;
     const paragrafo = paragrafoRef.current;
     const botao = botaoRef.current;
-    if (!secao || !bloco || !copo || !titulo || !paragrafo || !botao) return;
+    if (!secao || !bloco || !copo || !paragrafo || !botao) return;
 
-    let x = 0;
-    let inicioY = 0;
-    let fimY = 0;
-    let disponivel = 0;
     let agendado = false;
 
-    /**
-     * Tudo medido a partir do BLOCO, que é quem posiciona o copo. Medir contra
-     * o palco travado foi o erro anterior: o bloco fica centralizado dentro
-     * dele, e essa sobra virava deslocamento na hora de pousar.
-     */
-    const medir = () => {
-      const b = bloco.getBoundingClientRect();
-      const alvo = botao.getBoundingClientRect();
+    const posicionar = () => {
+      /**
+       * Tudo é medido AQUI, a cada quadro, e não uma vez na montagem.
+       *
+       * Guardar as medidas era rápido e errado: elas saíam uma única vez, e se
+       * o layout ainda não estivesse pronto naquele instante o copo ficava com
+       * a posição errada pra sempre — a rolagem só reusava o valor velho. Foi
+       * assim que ele foi parar em cima do título.
+       *
+       * E é `offsetTop`/`offsetLeft`, não `getBoundingClientRect`, porque o
+       * botão RECEBE um transform nosso no impacto: ler o retângulo dele
+       * realimentaria a conta com o proprio efeito. Os `offset*` são valores de
+       * layout e ignoram transform.
+       *
+       * Eles já vêm relativos ao BLOCO, que é quem posiciona o copo — medir
+       * contra qualquer outra coisa foi erro de rodadas anteriores.
+       */
+      const x = botao.offsetLeft + botao.offsetWidth / 2;
+      const fimY = botao.offsetTop - BASE;
 
-      // Cai em cima do botão: mesma linha vertical do centro dele.
-      x = alvo.left - b.left + alvo.width / 2;
       /**
        * De onde ele cai muda com o formato da tela, e isso não é detalhe.
        *
@@ -126,10 +129,9 @@ export function Chamada() {
        * o texto e o botão.
        */
       const empilhado = window.matchMedia("(max-width: 767px)").matches;
-      inicioY = empilhado
-        ? paragrafo.getBoundingClientRect().bottom - b.top - BASE + 24
+      const inicioY = empilhado
+        ? paragrafo.offsetTop + paragrafo.offsetHeight - BASE + 24
         : -BASE;
-      fimY = alvo.top - b.top - BASE;
 
       /**
        * Quanto a seção consegue de fato subir antes de a rolagem acabar.
@@ -143,19 +145,14 @@ export function Chamada() {
         document.documentElement.scrollHeight - (s.bottom + window.scrollY),
         0,
       );
-      disponivel = s.height + Math.min(abaixo, window.innerHeight);
+      const disponivel = s.height + Math.min(abaixo, window.innerHeight);
+      if (disponivel <= 0) return;
 
-      posicionar();
-    };
-
-    const posicionar = () => {
       /**
        * Quanto a seção já subiu, sobre o quanto ela CONSEGUE subir: 0 quando
        * encosta por baixo, 1 no fim da página. Sem trava, é a posição dela que
        * marca o tempo.
        */
-      if (disponivel <= 0) return;
-      const s = secao.getBoundingClientRect();
       const p = Math.min(
         Math.max((window.innerHeight - s.top) / disponivel, 0),
         1,
@@ -218,15 +215,25 @@ export function Chamada() {
       });
     };
 
-    medir();
-    const aoRedimensionar = () => requestAnimationFrame(medir);
+    posicionar();
     window.addEventListener("scroll", aoRolar, { passive: true });
-    window.addEventListener("resize", aoRedimensionar);
-    document.fonts?.ready.then(medir);
+    window.addEventListener("resize", aoRolar);
+
+    /**
+     * A rede de proteção do primeiro instante: fonte que chega depois, imagem
+     * que carrega, qualquer coisa que mude a altura da página muda também o
+     * `disponivel`. Como agora tudo é medido a cada quadro, basta pedir um
+     * quadro novo quando o layout mexer.
+     */
+    document.fonts?.ready.then(aoRolar);
+    const observador = new ResizeObserver(aoRolar);
+    observador.observe(bloco);
+    observador.observe(document.body);
 
     return () => {
       window.removeEventListener("scroll", aoRolar);
-      window.removeEventListener("resize", aoRedimensionar);
+      window.removeEventListener("resize", aoRolar);
+      observador.disconnect();
     };
   }, [reduzido]);
 
@@ -255,7 +262,7 @@ export function Chamada() {
               Para professores
             </p>
 
-            <h2 ref={tituloRef} className="text-4xl font-bold sm:text-5xl">
+            <h2 className="text-4xl font-bold sm:text-5xl">
               Todo experimento, aberto
             </h2>
 
