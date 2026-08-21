@@ -229,13 +229,15 @@ export function Equipe() {
           imagem e todas têm 1122 ou mais; numa tela 2x o mesmo cartão pediria
           1800px, que nenhuma tem, e o retrato amacia. 640 é o limite lá.
 
-          --larg é o menor entre três limites: três cartões por tela, caber
-          inteiro na altura, e o teto. A conta da altura desconta o que está em
-          volta em vez de chutar uma fração — cada pixel de largura vira 1,25
-          de foto (proporção 4:5) mais 64px de nome e curso, e os 160px são os
-          recuos de cima e de baixo. A regra anterior era `70vh*0.8`, herdada
-          de quando a foto era 3:4, e numa tela de 1037px parava o cartão em
-          581 deixando 250px de branco que nada preenchia. */}
+          --larg é o menor entre três limites: três cartões por tela, ocupar
+          pouco mais da metade da altura, e o teto.
+
+          A regra de altura é escrita ao contrário do que parece: cada pixel de
+          largura vira 1,25 de foto (proporção 4:5) mais 64px de nome e curso,
+          então `46svh - 52px` de largura dá um cartão de ~57% da tela. Ela já
+          foi `80svh - 160px`, calibrada pra encher a tela inteira — e encheu:
+          877px de cartão numa tela de 1037. Metade da graça da galeria é o
+          creme em volta, e não sobrava nenhum. */}
       <section
         ref={secaoRef}
         className="relative [--teto:900px] [@media(min-resolution:2dppx)]:[--teto:640px]"
@@ -243,7 +245,7 @@ export function Equipe() {
           {
             height: altura,
             "--larg":
-              "min(calc((100vw - 3rem) / 3), calc(80svh - 160px), var(--teto))",
+              "min(calc((100vw - 3rem) / 3), calc(46svh - 52px), var(--teto))",
             "--alt": "calc(var(--larg) * 1.25 + 64px)",
           } as React.CSSProperties
         }
