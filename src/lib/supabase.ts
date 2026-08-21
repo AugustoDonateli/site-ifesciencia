@@ -73,8 +73,8 @@ export async function buscarAjustes(): Promise<Ajustes> {
     nota: null,
     imprensa: [],
     instagram_url: "https://www.instagram.com/ifesciencia/",
-    youtube_url: null,
-    tiktok_url: null,
+    youtube_url: "https://www.youtube.com/@IFESCiência/shorts",
+    tiktok_url: "https://www.tiktok.com/@ifesciencia",
   };
 
   const { data, error } = await supabase

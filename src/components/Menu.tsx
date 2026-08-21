@@ -3,10 +3,16 @@
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 
+/**
+ * "O projeto" aponta pra `/#projeto`, com a barra, e ela não é detalhe: a
+ * seção só existe na home. Como `#projeto` puro, o link não fazia nada em
+ * /experimentos e na ficha de cada experimento — o navegador procurava a
+ * âncora na página em que já estava, não achava, e ficava parado.
+ */
 const itens = [
   { rotulo: "Início", href: "/" },
   { rotulo: "Experimentos", href: "/experimentos" },
-  { rotulo: "O projeto", href: "#projeto" },
+  { rotulo: "O projeto", href: "/#projeto" },
 ];
 
 /**
