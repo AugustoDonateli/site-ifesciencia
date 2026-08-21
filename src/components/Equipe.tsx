@@ -1,19 +1,56 @@
 "use client";
 
+import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
 import { Marcador } from "./Marcador";
 import { usarMovimentoReduzido } from "@/lib/usarMovimentoReduzido";
 
+type Pessoa = {
+  nome: string;
+  curso?: string;
+  ano?: string;
+  foto?: string;
+};
+
 /**
- * Fica fixa no código. Sobrenome do Pedro a confirmar com o Augusto.
+ * Fica fixa no código.
+ *
+ * O nome de cada um veio escrito na claquete da própria foto, então o que
+ * falta confirmar com o Augusto é só o resto: sobrenome do Pedro, nome
+ * completo e curso do Daniel, e se o Hilton continua na lista — ele aparece
+ * na foto do hero mas não mandou retrato individual.
  */
-const equipe = [
-  { nome: "Hilton Moulin", curso: "Coordenação", ano: "" },
-  { nome: "Augusto Donateli", curso: "Informática", ano: "2º ano" },
-  { nome: "Laura Fabris Scarpe", curso: "Informática", ano: "3º ano" },
-  { nome: "Pedro", curso: "Eletromecânica", ano: "3º ano" },
-  { nome: "Lucas Grifo da Costa", curso: "Monitoria", ano: "" },
+const equipe: Pessoa[] = [
+  { nome: "Hilton Moulin", curso: "Coordenação" },
+  {
+    nome: "Augusto Donateli",
+    curso: "Informática",
+    ano: "2º ano",
+    foto: "/equipe/augusto.webp",
+  },
+  {
+    nome: "Laura Fabris Scarpe",
+    curso: "Informática",
+    ano: "3º ano",
+    foto: "/equipe/laura.webp",
+  },
+  {
+    nome: "Pedro",
+    curso: "Eletromecânica",
+    ano: "3º ano",
+    foto: "/equipe/pedro.webp",
+  },
+  { nome: "Daniel", foto: "/equipe/daniel.webp" },
+  {
+    nome: "Lucas Grifo da Costa",
+    curso: "Monitoria",
+    foto: "/equipe/lucas.webp",
+  },
 ];
+
+/** O texto de abertura conta a equipe sozinho: escrito à mão, o número
+    envelhecia calado toda vez que alguém entrasse ou saísse. */
+const POR_EXTENSO = ["Nenhuma", "Uma", "Duas", "Três", "Quatro", "Cinco", "Seis", "Sete", "Oito", "Nove"];
 
 /**
  * Quanto scroll vertical vale cada pixel andado de lado.
@@ -22,22 +59,30 @@ const equipe = [
  */
 const LENTIDAO = 1.2;
 
-function Cartao({
-  nome,
-  curso,
-  ano,
-}: {
-  nome: string;
-  curso: string;
-  ano: string;
-}) {
+function Cartao({ nome, curso, ano, foto }: Pessoa) {
   return (
-    <div className="w-[78vw] max-w-[300px] shrink-0 sm:w-[44vw] md:w-[min(calc((100vw-3rem)/2.4),calc(80vh*0.75))] md:max-w-none">
-      <Marcador proporcao="3/4" rotulo="foto" />
+    /* O 0.8 acompanha a proporção 4:5 das fotos: é ele que mantém o cartão
+       inteiro dentro de 80vh. Com o 0.75 do enquadramento 3:4 antigo, a foto
+       passava da tela. */
+    <div className="w-[78vw] max-w-[300px] shrink-0 sm:w-[44vw] md:w-[min(calc((100vw-3rem)/2.4),calc(80vh*0.8))] md:max-w-none">
+      {foto ? (
+        <Image
+          src={foto}
+          alt={`${nome}, da equipe do Ifesciência`}
+          width={1120}
+          height={1400}
+          sizes="(max-width: 639px) 78vw, (max-width: 767px) 44vw, 580px"
+          className="w-full rounded-xl object-cover"
+        />
+      ) : (
+        <Marcador proporcao="4/5" rotulo="foto" />
+      )}
       <p className="mt-4 text-lg font-medium sm:text-xl">{nome}</p>
-      <p className="mt-1 font-mono text-xs text-tinta-3">
-        {ano ? `${curso} · ${ano}` : curso}
-      </p>
+      {curso ? (
+        <p className="mt-1 font-mono text-xs text-tinta-3">
+          {ano ? `${curso} · ${ano}` : curso}
+        </p>
+      ) : null}
     </div>
   );
 }
@@ -154,9 +199,9 @@ export function Equipe() {
           Quem faz o Ifesciência
         </h2>
         <p className="mt-5 max-w-xl text-tinta-2">
-          Cinco pessoas cuidam de tudo: escolher o experimento, montar, gravar,
-          editar e explicar. Desde 2022, duas gerações de estudantes já passaram
-          pelo projeto.
+          {POR_EXTENSO[equipe.length]} pessoas cuidam de tudo: escolher o
+          experimento, montar, gravar, editar e explicar. Desde 2022, duas
+          gerações de estudantes já passaram pelo projeto.
         </p>
       </div>
 

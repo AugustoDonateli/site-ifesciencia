@@ -1,5 +1,5 @@
+import Image from "next/image";
 import Link from "next/link";
-import { Marcador } from "./Marcador";
 import { TituloCascata } from "./TituloCascata";
 import { BotaoMagnetico } from "./BotaoMagnetico";
 import { TextoQueDigita } from "./TextoQueDigita";
@@ -80,7 +80,17 @@ export function Hero() {
 
         {/* Largura amarrada à altura da tela pra foto nunca estourar a dobra. */}
         <div className="w-[min(100%,calc(66svh*0.8))] md:ml-auto">
-          <Marcador proporcao="4/5" rotulo="foto principal" />
+          {/* A única imagem acima da dobra: carrega com prioridade, senão a
+              abertura fica um buraco enquanto o resto da página já apareceu. */}
+          <Image
+            src="/hero.webp"
+            alt="A equipe do Ifesciência reunida no campus do Ifes em Cachoeiro de Itapemirim"
+            width={1000}
+            height={1250}
+            priority
+            sizes="(max-width: 767px) 100vw, 480px"
+            className="w-full rounded-xl object-cover"
+          />
         </div>
       </div>
 
