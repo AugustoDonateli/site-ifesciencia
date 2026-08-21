@@ -16,8 +16,33 @@ const IMPACTO = 0.55;
  * Em pixels e não em fração da travessia porque a seção muda de altura com a
  * tela, e fração viraria trancos de durações diferentes — o mesmo erro que a
  * queda do copo cometeu.
+ *
+ * 180 é o que mantém o balanço colado na bola. Com 340 ele ainda sacudia com
+ * ela a 555px de distância e reduzida a 38px na tela — o número mexia sozinho,
+ * sem nada por perto que explicasse.
  */
-const JANELA_TRANCO = 340;
+const JANELA_TRANCO = 180;
+
+/**
+ * O balanço é um seno amortecido, e o SENO é o ponto todo.
+ *
+ * Com cosseno o número saltava do repouso pro deslocamento máximo num único
+ * quadro de rolagem, porque cos(0) vale 1. Isso não lê como pancada, lê como
+ * defeito — e, pior, como o máximo caía junto com o toque em vez de depois
+ * dele, o movimento nem parecia causado pela bola.
+ *
+ * sin(0) vale 0. O número está imóvel no instante do contato, sai do lugar a
+ * partir dali, chega no máximo logo depois e volta oscilando até parar. É a
+ * ordem que faz a bola parecer a causa.
+ *
+ * OSCILACAO dá volta e meia dentro da janela; AMORTECIMENTO deixa 2% da
+ * amplitude no fim, então ele também não termina com um salto. PICO é o maior
+ * valor que a fórmula atinge, e serve pra normalizar tudo em 1 — assim as
+ * amplitudes abaixo são pixels de verdade, não números soltos.
+ */
+const OSCILACAO = 9.4;
+const AMORTECIMENTO = 3.9;
+const PICO = 0.567;
 
 const bezier = (t: number, a: number, b: number, c: number) =>
   (1 - t) * (1 - t) * a + 2 * (1 - t) * t * b + t * t * c;
@@ -142,38 +167,22 @@ export function BolaMagnus() {
       }px) translate(-50%, -50%) rotate(${giro}deg) scale(${escala})`;
 
       /**
-       * O tranco no número: pancada seca e depois balanço até assentar.
-       *
-       * A versão anterior era um triângulo — subia até o pico exatamente em
-       * IMPACTO e voltava. Só que o pico existia por um quadro de rolagem, e
-       * todo o resto era rampa: 14px num número de 60px de altura, distribuídos
-       * ao longo de 357px de scroll. Lido devagar parecia deriva, e rolando
-       * rápido não se via nada.
-       *
-       * Aqui o deslocamento é máximo NO impacto e cai oscilando, como coisa
-       * pesada que levou pancada. É o balanço que salva: mesmo passando rápido,
-       * a pessoa pega o número fora do lugar em algum quadro.
+       * O tranco no número.
        *
        * Empurra pra esquerda porque é pra lá que a bola vai — tranco na direção
-       * contrária ao golpe denunciaria que é enfeite.
+       * contrária ao golpe denunciaria que é enfeite. O estufão de escala anda
+       * junto: deslocamento e giro dependem de a pessoa lembrar onde o número
+       * estava, mas um número que incha e murcha se denuncia sozinho, o que
+       * importa pra quem rola rápido.
        */
       const depois = (t - IMPACTO) / (JANELA_TRANCO / total);
       if (depois >= 0 && depois <= 1) {
-        /**
-         * Amortecimento lento e frequência baixa: duas voltas em 340px de
-         * scroll. Com o amortecimento rápido que tentei antes, o balanço já
-         * tinha morrido nos primeiros 90px — voltava a ser um lampejo que a
-         * rolagem engolia.
-         */
-        const forca = Math.exp(-depois * 2.2) * Math.cos(depois * 12.6);
-        /**
-         * A escala é o que mais se enxerga. Deslocamento e giro dependem de a
-         * pessoa lembrar onde o número estava; um número que incha e murcha se
-         * denuncia sozinho, mesmo passando rápido.
-         */
-        alvo.style.transform = `translate(${forca * -30}px, ${
-          forca * 20
-        }px) rotate(${forca * 3.5}deg) scale(${1 + forca * 0.06})`;
+        const forca =
+          (Math.sin(depois * OSCILACAO) * Math.exp(-depois * AMORTECIMENTO)) /
+          PICO;
+        alvo.style.transform = `translate(${forca * -24}px, ${
+          forca * 16
+        }px) rotate(${forca * 2.6}deg) scale(${1 + forca * 0.05})`;
       } else {
         alvo.style.transform = "";
       }
