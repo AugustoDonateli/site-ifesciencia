@@ -46,12 +46,20 @@ const BASE = Math.round(322 * ESCALA);
  * Com 160px fixos: cai 364 gastando 160 no computador, e 248 gastando 160 no
  * celular. Desce nos dois.
  *
- * A divisão fecha em FIM, e não no fim da travessia: o copo se abrir só quando
- * a seção já está saindo pelo alto entregaria o clímax fora da tela.
+ * E o progresso não é a travessia inteira da seção, é o pedaço dela que a
+ * página deixa acontecer. Esta é a ÚLTIMA seção do site: pra ela atravessar de
+ * verdade teria que subir até sumir por cima, e abaixo dela só existe o rodapé.
+ * A rolagem acaba antes. Medido, o progresso parava em 0.63 e a divisão, que
+ * ia de 0.52 a 0.72, mostrava só o comecinho — o copo abria uma fresta e
+ * congelava.
+ *
+ * Por isso a conta usa o que sobra embaixo, não a altura da tela. Aí o 1 vira
+ * alcançável e a divisão pode fechar nele, com o copo escancarado no ponto em
+ * que a pessoa chega ao fim da página.
  */
 const JANELA_QUEDA = 160;
-const POUSA = 0.52;
-const FIM = 0.72;
+const POUSA = 0.75;
+const FIM = 1;
 
 /**
  * A chamada final, com o copo caindo em cima do botão.
@@ -92,6 +100,7 @@ export function Chamada() {
     let x = 0;
     let inicioY = 0;
     let fimY = 0;
+    let disponivel = 0;
     let agendado = false;
 
     /**
@@ -121,22 +130,40 @@ export function Chamada() {
         ? paragrafo.getBoundingClientRect().bottom - b.top - BASE + 24
         : -BASE;
       fimY = alvo.top - b.top - BASE;
+
+      /**
+       * Quanto a seção consegue de fato subir antes de a rolagem acabar.
+       *
+       * O `min` com a altura da tela é o que mantém a conta honesta se um dia
+       * entrar mais coisa embaixo: com pouco abaixo, quem manda é o que sobra;
+       * com muito, quem manda é a travessia normal, e aí é a fórmula de sempre.
+       */
+      const s = secao.getBoundingClientRect();
+      const abaixo = Math.max(
+        document.documentElement.scrollHeight - (s.bottom + window.scrollY),
+        0,
+      );
+      disponivel = s.height + Math.min(abaixo, window.innerHeight);
+
       posicionar();
     };
 
     const posicionar = () => {
       /**
-       * Quanto da seção já atravessou a tela: 0 quando ela encosta por baixo,
-       * 1 quando some por cima. Sem trava, é a posição dela que marca o tempo.
+       * Quanto a seção já subiu, sobre o quanto ela CONSEGUE subir: 0 quando
+       * encosta por baixo, 1 no fim da página. Sem trava, é a posição dela que
+       * marca o tempo.
        */
+      if (disponivel <= 0) return;
       const s = secao.getBoundingClientRect();
-      const total = s.height + window.innerHeight;
-      if (total <= 0) return;
-      const p = Math.min(Math.max((window.innerHeight - s.top) / total, 0), 1);
+      const p = Math.min(
+        Math.max((window.innerHeight - s.top) / disponivel, 0),
+        1,
+      );
 
-      // A janela da queda vem de pixels, então vira fração aqui, onde a altura
-      // da travessia já é conhecida.
-      const solta = POUSA - JANELA_QUEDA / total;
+      // A janela da queda vem de pixels, então vira fração aqui, onde o
+      // percurso disponível já é conhecido.
+      const solta = POUSA - JANELA_QUEDA / disponivel;
 
       const por = (y: number, giro = 0) =>
         `translate(${x}px, ${y}px) translateX(-50%) rotate(${giro}deg)`;
