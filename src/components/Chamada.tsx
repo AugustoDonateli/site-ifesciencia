@@ -8,22 +8,27 @@ import { usarMovimentoReduzido } from "@/lib/usarMovimentoReduzido";
 /**
  * Medidas tiradas dos quadros de verdade, não chutadas.
  *
- * O objeto DESCE 42px dentro da própria imagem entre o primeiro quadro e os
- * seguintes — sobra da queda que veio no vídeo. Sem corrigir, o copo inteiro
- * pousa num lugar e as metades aparecem em outro.
+ * Desta vez os quadros já chegam alinhados. O vídeo pediu só a divisão — o
+ * copo parado, sem cair —, e mesmo assim o modelo desceu e ampliou as metades
+ * 327px enquanto elas se abriam. Isso foi corrigido quadro a quadro na
+ * exportação, normalizando a altura e pregando a base num ponto fixo.
  *
- * E ele ocupa pouco mais da metade da imagem, então o tamanho é definido pela
- * altura do COPO; a caixa sai daí.
+ * Medido depois: base, altura e centro variam 2px na sequência inteira, que é
+ * ruído de arredondamento. Por isso não existe mais correção aqui no CSS.
+ *
+ * Dentro do arquivo de 406x329 o copo tem 309px de altura e a base dele fica a
+ * 322px do topo. O tamanho é definido pela altura do COPO, nunca pela da
+ * imagem — a caixa sai daí.
  */
 const QUADROS = 13;
-const BASE_POR_QUADRO = [364, 394, 401, 402, 403, 404, 405, 405, 405, 406, 406, 406, 406];
-const BASE_REFERENCIA = 406;
+const ARQUIVO_LARGURA = 406;
+const ARQUIVO_ALTURA = 329;
 
 const ALTURA_DO_COPO = 150;
-const ESCALA = ALTURA_DO_COPO / 253;
-const LARGURA = Math.round(280 * ESCALA);
-const ALTURA = Math.round(460 * ESCALA);
-const BASE = Math.round(BASE_REFERENCIA * ESCALA);
+const ESCALA = ALTURA_DO_COPO / 309;
+const LARGURA = Math.round(ARQUIVO_LARGURA * ESCALA);
+const ALTURA = Math.round(ARQUIVO_ALTURA * ESCALA);
+const BASE = Math.round(322 * ESCALA);
 
 /** Quanto scroll a queda inteira consome. Curta demais, vira pulinho. */
 const PERCURSO = 1100;
@@ -224,16 +229,12 @@ export function Chamada() {
                 key={i}
                 src={`/objetos/copo-${String(i).padStart(2, "0")}.webp`}
                 alt=""
-                width={280}
-                height={460}
+                width={ARQUIVO_LARGURA}
+                height={ARQUIVO_ALTURA}
                 priority={i === 0}
+                unoptimized
                 className="absolute inset-0 h-full w-full object-contain"
-                style={{
-                  opacity: i === quadro ? 1 : 0,
-                  transform: `translateY(${
-                    (BASE_REFERENCIA - BASE_POR_QUADRO[i]) * ESCALA
-                  }px)`,
-                }}
+                style={{ opacity: i === quadro ? 1 : 0 }}
               />
             ))}
           </div>

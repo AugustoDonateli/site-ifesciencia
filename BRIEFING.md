@@ -833,3 +833,29 @@ quem posiciona o objeto é o bloco de texto. Duas rodadas perdidas nisso.
 - **O elemento do site reagir ao impacto** — o botão achatando na batida foi o
   que finalmente fez o objeto parecer parte da página.
 - 13 quadros WebP pesaram 152 KB no total.
+- **Reenquadrar sai de graça, gerar de novo custa crédito.** A imagem do copo
+  novo veio boa mas preenchendo o quadro inteiro, sem espaço para as metades
+  se abrirem. Em vez de gastar mais 2 créditos torcendo pelo enquadramento,
+  reduzi e preenchi o resto no `ffmpeg` com a cor do próprio fundo:
+  `scale=700:-1,pad=1536:2752:418:170:0xBE468E`. Cuidado com a cor: preencher
+  com um tom ligeiramente diferente cria uma costura, e o modelo de vídeo lê
+  costura como horizonte — foi assim que apareceu chão no primeiro clipe.
+  Confirmar com amostragem no canvas que a diferença é zero.
+- **A tolerância do recorte tem que ser MENOR que a distância entre o objeto e
+  o fundo — e essa distância se calcula.** O `colorkey` mede distância RGB
+  normalizada: `sqrt(dr²+dg²+db²) / (255·√3)`. O verde do copo (60,120,50)
+  está a **0.28** do magenta do vídeo (139,41,103). Eu usei `similarity=0.30`
+  e o recorte apagou o copo junto com o fundo, deixando só o contorno — e o
+  contorno tem a mesma caixa da silhueta, então as medições continuaram
+  parecendo certas por três rodadas. `0.14` resolveu.
+  **Conferir sempre contando pixels 100% opacos**, não só a caixa: o quadro
+  bom tem ~81 mil, o quebrado tinha 3,4 mil.
+- **O magenta do vídeo não é o magenta da imagem.** O modelo devolveu
+  `#8B2967` onde a entrada era `#BE468E`. Amostrar o fundo do vídeo gerado
+  antes de recortar, nunca reaproveitar a cor da imagem de origem.
+- **Pedir só a divisão não impede a deriva.** Mesmo com "o copo NÃO cai, NÃO
+  muda de posição nem de tamanho" no prompt, as metades desceram 327px e
+  cresceram 23% ao se abrir. A correção é a mesma de sempre: normalizar a
+  altura e pregar a base. Feita na exportação, com `scale`+`pad`+`crop` por
+  quadro, sobrou variação de 2px — e aí o componente não precisa de
+  `BASE_POR_QUADRO` nenhum.
