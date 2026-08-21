@@ -217,9 +217,25 @@ export function Equipe() {
       </div>
 
       <section ref={secaoRef} className="relative" style={{ height: altura }}>
+        {/* Os cartões encostam no alto, não no meio.
+
+            Centralizado, o que sobra de espaço vira metade em cima e metade
+            embaixo — e essa sobra cresce junto com a altura do monitor. Numa
+            tela de 720px são 76px de cada lado e ninguém repara; numa de 1050
+            viram 200px, e aí o título já rolou pra fora e fica um vazio sem
+            explicação antes das fotos.
+
+            Encostando no alto, a sobra vai toda pra baixo, que é onde ela não
+            incomoda: a página se lê de cima pra baixo.
+
+            O recuo acompanha a tela, mas nunca desce dos 5rem — abaixo disso o
+            cartão passaria por baixo do menu, que tem 69px e fica grudado no
+            topo junto com o palco. */}
         <div
-          className={`flex items-center overflow-hidden ${
-            preso ? "sticky top-0 h-screen py-6" : "py-12"
+          className={`flex overflow-hidden ${
+            preso
+              ? "sticky top-0 h-screen items-start pt-[max(5rem,10svh)] pb-6"
+              : "items-center py-12"
           }`}
         >
           <div
