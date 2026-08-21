@@ -10,6 +10,15 @@ const TAMANHO = 130;
 /** Em que ponto da rolagem a bola encosta no número. */
 const IMPACTO = 0.55;
 
+/**
+ * Quanto scroll o número leva balançando depois da pancada, em PIXELS.
+ *
+ * Em pixels e não em fração da travessia porque a seção muda de altura com a
+ * tela, e fração viraria trancos de durações diferentes — o mesmo erro que a
+ * queda do copo cometeu.
+ */
+const JANELA_TRANCO = 340;
+
 const bezier = (t: number, a: number, b: number, c: number) =>
   (1 - t) * (1 - t) * a + 2 * (1 - t) * t * b + t * t * c;
 
@@ -133,13 +142,41 @@ export function BolaMagnus() {
       }px) translate(-50%, -50%) rotate(${giro}deg) scale(${escala})`;
 
       /**
-       * O tranco no número. Curto e forte, como pancada — não um carinho
-       * que acompanha a bola pela tela.
+       * O tranco no número: pancada seca e depois balanço até assentar.
+       *
+       * A versão anterior era um triângulo — subia até o pico exatamente em
+       * IMPACTO e voltava. Só que o pico existia por um quadro de rolagem, e
+       * todo o resto era rampa: 14px num número de 60px de altura, distribuídos
+       * ao longo de 357px de scroll. Lido devagar parecia deriva, e rolando
+       * rápido não se via nada.
+       *
+       * Aqui o deslocamento é máximo NO impacto e cai oscilando, como coisa
+       * pesada que levou pancada. É o balanço que salva: mesmo passando rápido,
+       * a pessoa pega o número fora do lugar em algum quadro.
+       *
+       * Empurra pra esquerda porque é pra lá que a bola vai — tranco na direção
+       * contrária ao golpe denunciaria que é enfeite.
        */
-      const tranco = Math.max(0, 1 - Math.abs(t - IMPACTO) * 9);
-      alvo.style.transform = tranco
-        ? `translateY(${tranco * 14}px) rotate(${tranco * 2}deg)`
-        : "";
+      const depois = (t - IMPACTO) / (JANELA_TRANCO / total);
+      if (depois >= 0 && depois <= 1) {
+        /**
+         * Amortecimento lento e frequência baixa: duas voltas em 340px de
+         * scroll. Com o amortecimento rápido que tentei antes, o balanço já
+         * tinha morrido nos primeiros 90px — voltava a ser um lampejo que a
+         * rolagem engolia.
+         */
+        const forca = Math.exp(-depois * 2.2) * Math.cos(depois * 12.6);
+        /**
+         * A escala é o que mais se enxerga. Deslocamento e giro dependem de a
+         * pessoa lembrar onde o número estava; um número que incha e murcha se
+         * denuncia sozinho, mesmo passando rápido.
+         */
+        alvo.style.transform = `translate(${forca * -30}px, ${
+          forca * 20
+        }px) rotate(${forca * 3.5}deg) scale(${1 + forca * 0.06})`;
+      } else {
+        alvo.style.transform = "";
+      }
     };
 
     const aoRolar = () => {
