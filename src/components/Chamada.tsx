@@ -204,12 +204,19 @@ export function Chamada() {
   }, [reduzido]);
 
   return (
-    /* O recuo de cima é maior que o de baixo porque o copo começa acima do
-       texto: com menos que isso ele nasceria fora da faixa creme, e o corte
-       apareceria. O `overflow-hidden` é a rede de segurança pra tela curta. */
+    /* O recuo de cima é bem maior que o de baixo, e não é folga decorativa: o
+       copo começa 150px acima do texto, então esse recuo é o céu de onde ele
+       cai. Com os 160px de antes sobravam 11px entre o topo do copo e a borda
+       da seção — ele nascia grudado na linha de divisão, parecendo cortado em
+       vez de suspenso. Com 240px sobram 90.
+
+       No celular não vale: lá o copo começa embaixo do parágrafo, no vão até o
+       botão, então o recuo de cima não tem nada a ver com ele.
+
+       O `overflow-hidden` é a rede de segurança pra tela curta. */
     <section
       ref={secaoRef}
-      className="relative overflow-hidden border-t border-borda bg-creme-2 pb-24 pt-32 md:pb-32 md:pt-40"
+      className="relative overflow-hidden border-t border-borda bg-creme-2 pb-24 pt-32 md:pb-32 md:pt-60"
     >
       <div
         ref={blocoRef}
@@ -251,7 +258,17 @@ export function Chamada() {
           style={{ width: LARGURA, height: ALTURA }}
         >
           {/* Todos os quadros montados de uma vez: trocar o endereço da
-                imagem faria o navegador buscar arquivo no meio da rolagem. */}
+              imagem faria o navegador buscar arquivo no meio da rolagem.
+
+              E todos com `eager`, que é o que faz isso valer. O padrão do
+              next/image é `lazy`, e aí os doze quadros da divisão só começavam
+              a ser buscados quando já era hora de mostrá-los — o copo pousava e
+              não abria. Passava despercebido com a seção travada de 2137px,
+              que entrava na tela muito antes da batida e dava tempo de sobra;
+              com 709px não dá. Foi o mesmo tropeço da bola.
+
+              Saem já no tamanho e no formato de entrega, então `unoptimized`:
+              passar pelo otimizador só somaria uma ida ao servidor. */}
           {Array.from({ length: QUADROS }, (_, i) => (
             <Image
               key={i}
@@ -259,8 +276,8 @@ export function Chamada() {
               alt=""
               width={ARQUIVO_LARGURA}
               height={ARQUIVO_ALTURA}
-              priority={i === 0}
               unoptimized
+              loading="eager"
               className="absolute inset-0 h-full w-full object-contain"
               style={{ opacity: i === quadro ? 1 : 0 }}
             />
