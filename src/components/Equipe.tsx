@@ -53,14 +53,28 @@ const equipe: Pessoa[] = [
 
 /** O texto de abertura conta a equipe sozinho: escrito à mão, o número
     envelhecia calado toda vez que alguém entrasse ou saísse. */
-const POR_EXTENSO = ["Nenhuma", "Uma", "Duas", "Três", "Quatro", "Cinco", "Seis", "Sete", "Oito", "Nove"];
+const POR_EXTENSO = [
+  "Nenhuma",
+  "Uma",
+  "Duas",
+  "Três",
+  "Quatro",
+  "Cinco",
+  "Seis",
+  "Sete",
+  "Oito",
+  "Nove",
+];
 
 /**
  * Quanto scroll vertical vale cada pixel andado de lado.
- * Com 1.6, a pessoa rola bem mais do que a fileira anda — dá tempo de olhar
- * cada foto. Com 1 a galeria inteira atravessa num gesto só.
+ *
+ * Acima de 1 a pessoa rola mais do que a fileira anda, e sobra tempo de olhar
+ * cada foto; abaixo de 1 a galeria atravessa depressa. Estava em 1.2 e ficou
+ * arrastado, ainda mais depois que o cartão cresceu — cartão maior é fileira
+ * mais longa, e a distância a percorrer cresceu junto sem ninguém pedir.
  */
-const LENTIDAO = 1.2;
+const LENTIDAO = 0.9;
 
 function Cartao({ nome, curso, ano, foto }: Pessoa) {
   return (
@@ -246,13 +260,14 @@ export function Equipe() {
             palco, então esse piso é o que garante que um não cubra o outro. */}
         <div
           className={`flex overflow-hidden ${
-            preso ? "sticky top-0 h-screen items-start pb-6" : "items-center py-12"
+            preso
+              ? "sticky top-0 h-screen items-start pb-6"
+              : "items-center py-12"
           }`}
           style={
             preso
               ? {
-                  paddingTop:
-                    "max(5rem, calc((100svh - var(--alt)) / 2))",
+                  paddingTop: "max(5rem, calc((100svh - var(--alt)) / 2))",
                 }
               : undefined
           }

@@ -30,11 +30,28 @@ const LARGURA = Math.round(ARQUIVO_LARGURA * ESCALA);
 const ALTURA = Math.round(ARQUIVO_ALTURA * ESCALA);
 const BASE = Math.round(322 * ESCALA);
 
-/** Quanto scroll a queda inteira consome. Curta demais, vira pulinho. */
-const PERCURSO = 1100;
-
-const SOLTA = 0.3;
-const POUSA = 0.62;
+/**
+ * Os tempos da queda, medidos na travessia da seção pela tela.
+ *
+ * Sem a seção travada, o copo desce junto com a página. O que se vê como queda
+ * não é a distância que ele percorre, é a diferença entre ela e o scroll gasto
+ * no caminho — se a página sobe tanto quanto o copo desce, ele fica parado no
+ * ar.
+ *
+ * Por isso a janela é um orçamento em PIXELS, não uma fração da travessia. Com
+ * fração, a mesma regra dava quedas de velocidades diferentes: a seção mede
+ * 709px no computador e 860 no celular, e os 14% que rendiam uma queda boa num
+ * rendiam 14px de deslocamento no outro — copo praticamente imóvel.
+ *
+ * Com 160px fixos: cai 364 gastando 160 no computador, e 248 gastando 160 no
+ * celular. Desce nos dois.
+ *
+ * A divisão fecha em FIM, e não no fim da travessia: o copo se abrir só quando
+ * a seção já está saindo pelo alto entregaria o clímax fora da tela.
+ */
+const JANELA_QUEDA = 160;
+const POUSA = 0.52;
+const FIM = 0.72;
 
 /**
  * A chamada final, com o copo caindo em cima do botão.
@@ -46,6 +63,12 @@ const POUSA = 0.62;
  *
  * De quebra, ficou igual ao resto do site: "O projeto", "A equipe" e o
  * catálogo são todos alinhados à esquerda. A centralizada era a exceção.
+ *
+ * E ela também deixou de ser travada. Prender a página exigia uma seção de
+ * `100svh + 1100px`, e era isso que fazia a faixa creme tomar a tela inteira.
+ * Agora é uma seção de recuo normal, como as outras, e a queda é guiada pela
+ * posição dela na tela — a mesma mecânica da bola do alcance, que não prende
+ * nada.
  */
 export function Chamada() {
   const secaoRef = useRef<HTMLElement>(null);
@@ -102,14 +125,18 @@ export function Chamada() {
     };
 
     const posicionar = () => {
-      const total = secao.offsetHeight - window.innerHeight;
+      /**
+       * Quanto da seção já atravessou a tela: 0 quando ela encosta por baixo,
+       * 1 quando some por cima. Sem trava, é a posição dela que marca o tempo.
+       */
+      const s = secao.getBoundingClientRect();
+      const total = s.height + window.innerHeight;
       if (total <= 0) return;
+      const p = Math.min(Math.max((window.innerHeight - s.top) / total, 0), 1);
 
-      const passado = Math.min(
-        Math.max(-secao.getBoundingClientRect().top, 0),
-        total,
-      );
-      const p = passado / total;
+      // A janela da queda vem de pixels, então vira fração aqui, onde a altura
+      // da travessia já é conhecida.
+      const solta = POUSA - JANELA_QUEDA / total;
 
       const por = (y: number, giro = 0) =>
         `translate(${x}px, ${y}px) translateX(-50%) rotate(${giro}deg)`;
@@ -121,7 +148,7 @@ export function Chamada() {
         return;
       }
 
-      if (p < SOLTA) {
+      if (p < solta) {
         const balanco = Math.sin(p * 55) * 2.5;
         copo.style.transform = por(inicioY, balanco);
         botao.style.transform = "";
@@ -130,7 +157,7 @@ export function Chamada() {
       }
 
       if (p < POUSA) {
-        const q = (p - SOLTA) / (POUSA - SOLTA);
+        const q = (p - solta) / (POUSA - solta);
         const caida = q * q;
         copo.style.transform = por(
           inicioY + (fimY - inicioY) * caida,
@@ -141,7 +168,7 @@ export function Chamada() {
         return;
       }
 
-      const q = (p - POUSA) / (1 - POUSA);
+      const q = Math.min((p - POUSA) / (FIM - POUSA), 1);
       copo.style.transform = por(fimY);
       setQuadro(Math.min(Math.floor(q * QUADROS), QUADROS - 1));
 
@@ -177,67 +204,67 @@ export function Chamada() {
   }, [reduzido]);
 
   return (
+    /* O recuo de cima é maior que o de baixo porque o copo começa acima do
+       texto: com menos que isso ele nasceria fora da faixa creme, e o corte
+       apareceria. O `overflow-hidden` é a rede de segurança pra tela curta. */
     <section
       ref={secaoRef}
-      className="relative border-t border-borda bg-creme-2"
-      style={{ height: `calc(100svh + ${PERCURSO}px)` }}
+      className="relative overflow-hidden border-t border-borda bg-creme-2 pb-24 pt-32 md:pb-32 md:pt-40"
     >
-      <div className="sticky top-0 flex h-screen items-center overflow-hidden">
-        <div
-          ref={blocoRef}
-          className="relative mx-auto w-full max-w-[1240px] px-6"
-        >
-          <div className="grid gap-12 md:grid-cols-[minmax(0,1fr)_minmax(0,300px)] md:items-stretch md:gap-20">
-            <div className="max-w-xl">
-              <p className="mb-5 font-mono text-xs uppercase tracking-[0.18em] text-tinta-3">
-                Para professores
-              </p>
+      <div
+        ref={blocoRef}
+        className="relative mx-auto w-full max-w-[1240px] px-6"
+      >
+        <div className="grid gap-12 md:grid-cols-[minmax(0,1fr)_minmax(0,300px)] md:items-stretch md:gap-20">
+          <div className="max-w-xl">
+            <p className="mb-5 font-mono text-xs uppercase tracking-[0.18em] text-tinta-3">
+              Para professores
+            </p>
 
-              <h2 ref={tituloRef} className="text-4xl font-bold sm:text-5xl">
-                Todo experimento, aberto
-              </h2>
+            <h2 ref={tituloRef} className="text-4xl font-bold sm:text-5xl">
+              Todo experimento, aberto
+            </h2>
 
-              <p ref={paragrafoRef} className="mt-6 text-lg text-tinta-2">
-                Cada vídeo do Ifesciência vira uma ficha com os materiais, o
-                passo a passo, o que costuma dar errado e um PDF para imprimir.
-                Sem cadastro e sem custo, para qualquer professor do Brasil.
-              </p>
-            </div>
+            <p ref={paragrafoRef} className="mt-6 text-lg text-tinta-2">
+              Cada vídeo do Ifesciência vira uma ficha com os materiais, o passo
+              a passo, o que costuma dar errado e um PDF para imprimir. Sem
+              cadastro e sem custo, para qualquer professor do Brasil.
+            </p>
+          </div>
 
-            {/* No celular a coluna vai parar embaixo do texto, então o recuo
+          {/* No celular a coluna vai parar embaixo do texto, então o recuo
                 de cima é o que dá espaço pra queda acontecer sem cruzar nada. */}
-            <div className="mt-56 flex flex-col justify-end md:mt-0 md:min-h-[420px]">
-              <Link
-                ref={botaoRef}
-                href="/experimentos"
-                className="relative z-10 inline-block self-center rounded-full bg-verde px-8 py-4 font-medium text-white transition-colors duration-200 hover:bg-verde-escuro md:self-start"
-              >
-                Ver experimentos
-              </Link>
-            </div>
+          <div className="mt-56 flex flex-col justify-end md:mt-0 md:min-h-[420px]">
+            <Link
+              ref={botaoRef}
+              href="/experimentos"
+              className="relative z-10 inline-block self-center rounded-full bg-verde px-8 py-4 font-medium text-white transition-colors duration-200 hover:bg-verde-escuro md:self-start"
+            >
+              Ver experimentos
+            </Link>
           </div>
+        </div>
 
-          <div
-            ref={copoRef}
-            className="pointer-events-none absolute left-0 top-0 z-[15] will-change-transform"
-            style={{ width: LARGURA, height: ALTURA }}
-          >
-            {/* Todos os quadros montados de uma vez: trocar o endereço da
+        <div
+          ref={copoRef}
+          className="pointer-events-none absolute left-0 top-0 z-[15] will-change-transform"
+          style={{ width: LARGURA, height: ALTURA }}
+        >
+          {/* Todos os quadros montados de uma vez: trocar o endereço da
                 imagem faria o navegador buscar arquivo no meio da rolagem. */}
-            {Array.from({ length: QUADROS }, (_, i) => (
-              <Image
-                key={i}
-                src={`/objetos/copo-${String(i).padStart(2, "0")}.webp`}
-                alt=""
-                width={ARQUIVO_LARGURA}
-                height={ARQUIVO_ALTURA}
-                priority={i === 0}
-                unoptimized
-                className="absolute inset-0 h-full w-full object-contain"
-                style={{ opacity: i === quadro ? 1 : 0 }}
-              />
-            ))}
-          </div>
+          {Array.from({ length: QUADROS }, (_, i) => (
+            <Image
+              key={i}
+              src={`/objetos/copo-${String(i).padStart(2, "0")}.webp`}
+              alt=""
+              width={ARQUIVO_LARGURA}
+              height={ARQUIVO_ALTURA}
+              priority={i === 0}
+              unoptimized
+              className="absolute inset-0 h-full w-full object-contain"
+              style={{ opacity: i === quadro ? 1 : 0 }}
+            />
+          ))}
         </div>
       </div>
     </section>
