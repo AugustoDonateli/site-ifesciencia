@@ -10,6 +10,22 @@ const itens = [
 ];
 
 /**
+ * A faixa do fim da página onde o menu para de mudar de tamanho.
+ *
+ * Ele é `sticky`, e sticky entra na altura do documento. Encolher tira 20px
+ * dessa altura, e colado no fim da página isso vira um laço fechado: encolhe,
+ * a página fica mais curta, o navegador puxa a rolagem pra dentro do novo
+ * limite, o puxão é lido como "subiu", o menu cresce, a página alonga, dá
+ * espaço pra descer de novo. Com o Lenis empurrando pro fim, não para sozinho
+ * — era a vibração no rodapé, e acontecia em toda página que tem menu.
+ *
+ * 64 é bem mais que os 20px do puxão, de propósito: a folga tem que cobrir o
+ * estrago com sobra, e nos últimos 64px de rolagem ninguém repara que o menu
+ * ficou do tamanho que estava.
+ */
+const FOLGA_DO_FIM = 64;
+
+/**
  * O menu encolhe quando você desce e volta ao normal quando sobe.
  * Devolve espaço de tela pra quem está lendo — importante no celular,
  * onde a barra do Instagram já come um pedaço.
@@ -31,13 +47,18 @@ export function Menu() {
       requestAnimationFrame(() => {
         agendado = false;
         const atual = window.scrollY;
+        const limite =
+          document.documentElement.scrollHeight - window.innerHeight;
 
-        // Só encolhe depois de sair do topo, pra não piscar no começo.
-        const deveEncolher = atual > 120 && atual > anterior;
-        const deveVoltar = atual < anterior;
+        // Colado no fim, o menu fica do tamanho que está. Ver FOLGA_DO_FIM.
+        if (limite - atual > FOLGA_DO_FIM) {
+          // Só encolhe depois de sair do topo, pra não piscar no começo.
+          const deveEncolher = atual > 120 && atual > anterior;
+          const deveVoltar = atual < anterior;
 
-        if (deveEncolher) setEncolhido(true);
-        else if (deveVoltar) setEncolhido(false);
+          if (deveEncolher) setEncolhido(true);
+          else if (deveVoltar) setEncolhido(false);
+        }
 
         anterior = atual;
       });
