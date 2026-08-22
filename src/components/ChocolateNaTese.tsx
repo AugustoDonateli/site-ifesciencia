@@ -9,52 +9,39 @@ import { usarMovimentoReduzido } from "@/lib/usarMovimentoReduzido";
  */
 const MARCADOR = true;
 
+/** Quanto scroll a passagem inteira consome, em pixels. */
+const PASSAGEM = 460;
+const PASSAGEM_SOLTA = 280;
+
+/** Onde a passagem acontece, na travessia da seção (ou da frase, no celular). */
+const MEIO = 0.5;
+const MEIO_SOLTA = 0.55;
+
 /**
- * Quanto scroll a barra leva pra entrar e quanto leva pra abrir, em PIXELS.
- *
- * Em pixels e não em fração porque a seção tem alturas diferentes no celular e
- * no computador — a mesma fração viraria velocidades diferentes. Lição da queda
- * do copo.
+ * O reflexo prismático. Discreto de propósito — arco-íris cheio ao lado de
+ * texto sério vira enfeite de festa. São os verdes e azuis da paleta puxados
+ * para roxo e âmbar, que é o caminho que um filme de difração faz de verdade.
  */
-const ENTRADA = 320;
-const ABERTURA = 420;
-
-/** Onde a barra encosta na frase, na travessia da seção. */
-const POUSA = 0.52;
+const IRIDESCENCIA =
+  "#2f9e44 0%, #2a93a8 28%, #6f5aa0 54%, #b8558a 78%, #b07a2a 100%";
 
 /**
- * No celular a conta é outra, e o motivo não é estético.
+ * A barra de chocolate holográfico que passa por cima da tese e a deixa acesa.
  *
- * A coluna de texto só gruda a partir de `md`. Solta, a frase sobe com a
- * rolagem, e aí a travessia da SEÇÃO deixa de dizer onde ela está: medido, a
- * abertura terminava com a frase em −418, bem fora da tela. Quem marca o tempo
- * lá é a própria frase atravessando o quadro.
+ * A frase é *a ciência está presente em diversos aspectos da vida diária*.
  *
- * A janela também encurta. A frase cruza a tela inteira em cerca de 880px de
- * rolagem, e os 740 do computador não caberiam sem espremer o pouso contra a
- * borda de cima.
- */
-const ENTRADA_SOLTA = 180;
-const ABERTURA_SOLTA = 220;
-const POUSA_SOLTA = 0.55;
-
-/**
- * A barra de chocolate holográfico que parte em cima da tese do projeto.
+ * O objeto não bate em nada e não quebra: ele PASSA, como a luz passa.
+ * Chocolate holográfico não brilha sozinho — tem um filme prensado que difrata
+ * a luz, e sem luz atravessando é uma barra marrom comum. Então a barra
+ * deslizando sobre a frase é o próprio fenômeno acontecendo, e o que ela deixa
+ * para trás é a frase iridescente. A ideia é do Augusto.
  *
- * A frase é *a ciência está presente em diversos aspectos da vida diária*, e a
- * barra existe pra demonstrá-la em vez de deixar ela só afirmada: chocolate
- * holográfico é chocolate com um adesivo prensado — o objeto mais banal
- * possível, com um arco-íris dentro. Ela cobre a frase, parte, e as metades se
- * abrem devolvendo a frase.
+ * Isso resolveu o que travou oito tentativas antes. A tese fica espremida no
+ * meio de um parágrafo denso e não tem folga nenhuma em volta — mas objeto que
+ * só passa não precisa de folga. E nada fica coberto parado: a versão anterior
+ * pousava em cima da frase e tapava o parágrafo inteiro.
  *
- * Foram oito lugares testados antes deste. O que reprovou os outros sete foi o
- * Augusto: "ele só existe". O objeto tem que SER a ideia da seção, não ficar do
- * lado dela — o copo abre em cima do botão que abre o catálogo, a bola é
- * literalmente alcance. Aqui, trocar o chocolate por outro objeto quebraria o
- * sentido, e é isso que faz ele valer o lugar.
- *
- * Entra deslizando de lado, não caindo: cair significaria atravessar o
- * parágrafo inteiro de cima, que é exatamente a reclamação que o copo já rendeu.
+ * O texto acende e não apaga. Uma vez que a luz passou, passou.
  */
 export function ChocolateNaTese() {
   const ref = useRef<HTMLDivElement>(null);
@@ -67,118 +54,127 @@ export function ChocolateNaTese() {
     if (!palco || !secao) return;
 
     const tese = secao.querySelector<HTMLElement>("[data-tese]");
-    if (!tese) return;
+    const base = palco.offsetParent as HTMLElement | null;
+    if (!tese || !base) return;
 
-    const cima = palco.children[0] as HTMLElement;
-    const baixo = palco.children[1] as HTMLElement;
-    if (!cima || !baixo) return;
+    /**
+     * O brilho é pintado por cima, em `lighten`, e não trocando a cor do texto.
+     *
+     * `lighten` fica com o mais claro entre o que está embaixo e o que está em
+     * cima, canal a canal. O creme do fundo é mais claro que qualquer cor do
+     * reflexo, então ele não muda; a tinta do texto é mais escura que todas,
+     * então ela vira o reflexo. Resultado: acende as letras e não pinta o fundo.
+     *
+     * A alternativa seria `background-clip: text`, que era mais curta e estava
+     * errada: texto que quebra em duas linhas tem o fundo pintado numa caixa
+     * só, emendada, e a divisa do brilho andaria fora de sincronia com a barra.
+     *
+     * Uma camada por LINHA, porque `getClientRects` devolve um retângulo por
+     * pedaço quebrado — e é isso que dá a divisa reta atravessando as duas.
+     */
+    const camadas: HTMLElement[] = [];
+    const camada = (i: number) => {
+      if (camadas[i]) return camadas[i];
+      const el = document.createElement("span");
+      el.setAttribute("aria-hidden", "true");
+      el.style.position = "absolute";
+      el.style.pointerEvents = "none";
+      el.style.mixBlendMode = "lighten";
+      el.style.backgroundImage = `linear-gradient(90deg, ${IRIDESCENCIA})`;
+      el.style.backgroundRepeat = "no-repeat";
+      el.style.zIndex = "10";
+      base.appendChild(el);
+      camadas[i] = el;
+      return el;
+    };
 
+    /** Uma vez aceso, não apaga. Guarda o ponto mais longe que a luz chegou. */
+    let maisLonge = 0;
     let agendado = false;
 
     const posicionar = () => {
-      /**
-       * A barra é medida contra a frase a cada quadro, e não guardada de uma
-       * vez. A frase muda de tamanho quando o texto reflui — outra largura de
-       * tela, outra quebra de linha — e medida guardada sai do lugar calada.
-       * Foi assim que o copo foi parar em cima do título.
-       */
       const r = tese.getBoundingClientRect();
-
-      /**
-       * A referência é quem POSICIONA a barra, não a barra.
-       *
-       * `left` e `top` de um absoluto são relativos ao `offsetParent`, então
-       * medir contra o retângulo do próprio palco fazia a conta se referenciar
-       * a si mesma: cada quadro reposicionava a barra a partir de onde ela já
-       * estava. Ela nascia no topo da coluna e nunca chegava na frase.
-       */
-      const base = palco.offsetParent as HTMLElement | null;
-      if (!base) return;
       const p = base.getBoundingClientRect();
 
       /**
-       * A barra cobre a FRASE e nada além dela.
-       *
-       * A altura sai da altura da frase, não da largura da barra. Tirando da
-       * largura, a proporção de barra de chocolate dava 158px em cima de uma
-       * frase de 44 — 114px de texto vizinho tapado à toa, e o parágrafo
-       * inteiro virava ilegível na passagem.
-       *
-       * O efeito colateral é que a barra muda de formato com a tela, e isso
-       * está certo: no computador a frase cabe em duas linhas e sai uma barra
-       * comprida e fina; no celular ela quebra em três ou quatro e sai uma
-       * barra encorpada. Nos dois casos ela cobre exatamente o que vai
-       * revelar, que é o ponto.
+       * A barra é pequena e a altura sai da frase, não da largura. Tirando da
+       * largura, a proporção de barra dava 158px em cima de uma frase de 44 e o
+       * parágrafo inteiro ficava ilegível na passagem.
        */
-      const largura = r.width + 24;
+      const largura = Math.max(96, Math.min(140, r.width * 0.22));
       const altura = Math.round(r.height + 16);
-      const centroX = r.left - p.left + r.width / 2;
       const centroY = r.top - p.top + r.height / 2;
 
       palco.style.width = `${largura}px`;
       palco.style.height = `${altura}px`;
-      palco.style.left = `${centroX - largura / 2}px`;
+      palco.style.left = `${r.left - p.left}px`;
       palco.style.top = `${centroY - altura / 2}px`;
 
-      if (reduzido) {
-        palco.style.opacity = "0";
-        return;
-      }
+      /** Onde a borda esquerda da barra está, para um dado avanço da passagem. */
+      const bordaEm = (q: number) =>
+        r.left + (-largura - 20 + q * (r.width + largura * 2 + 40));
 
-      /**
-       * Grudada, a frase fica imóvel na tela e não serve de relógio — quem
-       * marca é a seção. Solta, é a frase que atravessa, e é ela que marca.
-       */
       const empilhado = window.matchMedia("(max-width: 767px)").matches;
+      const s = secao.getBoundingClientRect();
       const total = empilhado
         ? window.innerHeight + r.height
-        : secao.getBoundingClientRect().height + window.innerHeight;
+        : s.height + window.innerHeight;
       if (total <= 0) return;
 
-      const percorrido = empilhado
-        ? window.innerHeight - r.top
-        : window.innerHeight - secao.getBoundingClientRect().top;
-      const t = Math.min(Math.max(percorrido / total, 0), 1);
-
-      const pousa = empilhado ? POUSA_SOLTA : POUSA;
-      const solta = pousa - (empilhado ? ENTRADA_SOLTA : ENTRADA) / total;
-      const fim = pousa + (empilhado ? ABERTURA_SOLTA : ABERTURA) / total;
-
-      if (t < solta) {
+      let q: number;
+      if (reduzido) {
+        // Sem movimento: a frase já nasce acesa e a barra não aparece.
+        q = 1;
         palco.style.opacity = "0";
-        return;
+      } else {
+        /**
+         * Grudada, a frase fica imóvel na tela e não serve de relógio — quem
+         * marca é a seção. Solta, é a frase que atravessa, e é ela que marca.
+         */
+        const percorrido = empilhado
+          ? window.innerHeight - r.top
+          : window.innerHeight - s.top;
+        const t = Math.min(Math.max(percorrido / total, 0), 1);
+        const janela = (empilhado ? PASSAGEM_SOLTA : PASSAGEM) / total;
+        const meio = empilhado ? MEIO_SOLTA : MEIO;
+        q = (t - (meio - janela / 2)) / janela;
+
+        palco.style.opacity = q >= 0 && q <= 1 ? "1" : "0";
+        if (q >= 0 && q <= 1) {
+          palco.style.transform = `translateX(${bordaEm(q) - r.left}px)`;
+        }
+        q = Math.min(Math.max(q, 0), 1);
       }
 
-      palco.style.opacity = "1";
-
-      if (t < pousa) {
-        // Entrada: desliza da esquerda e desacelera até encostar.
-        const q = (t - solta) / (pousa - solta);
-        const e = 1 - Math.pow(1 - q, 3);
-        const x = -(largura + centroX) * (1 - e);
-        palco.style.transform = `translateX(${x}px)`;
-        cima.style.transform = "";
-        baixo.style.transform = "";
-        return;
-      }
-
-      palco.style.transform = "translateX(0px)";
+      if (q > maisLonge) maisLonge = q;
+      const borda = bordaEm(maisLonge);
 
       /**
-       * A abertura. O tranco no começo é o estalo da quebra; depois as metades
-       * só afastam. Vertical de propósito: é a frase que aparece no vão, e ela
-       * está deitada.
+       * Cada linha acende da própria borda esquerda até a divisa. O degradê
+       * corre pela frase INTEIRA e não se repete por linha: por isso a largura
+       * dele é a soma das linhas, e cada uma recebe o pedaço que lhe cabe.
        */
-      const q = Math.min((t - pousa) / (fim - pousa), 1);
-      const tranco = Math.max(0, 1 - q * 12);
-      const abre = Math.pow(Math.max(0, (q - 0.04) / 0.96), 1.3);
+      const pedacos = [...tese.getClientRects()];
+      const larguraTotal = pedacos.reduce((soma, x) => soma + x.width, 0);
+      let acumulado = 0;
 
-      cima.style.transform = `translateY(${
-        -abre * altura * 0.62 - tranco * 3
-      }px) rotate(${-abre * 4}deg)`;
-      baixo.style.transform = `translateY(${
-        abre * altura * 0.68 + tranco * 3
-      }px) rotate(${abre * 4}deg)`;
+      pedacos.forEach((rect, i) => {
+        const el = camada(i);
+        const visivel = Math.min(Math.max(borda - rect.left, 0), rect.width);
+        el.style.left = `${rect.left - p.left}px`;
+        el.style.top = `${rect.top - p.top}px`;
+        el.style.height = `${rect.height}px`;
+        el.style.width = `${visivel}px`;
+        el.style.backgroundSize = `${larguraTotal}px 100%`;
+        el.style.backgroundPosition = `${-acumulado}px center`;
+        el.style.display = visivel > 0.5 ? "block" : "none";
+        acumulado += rect.width;
+      });
+
+      // Sobrou camada de um layout anterior com mais linhas: some com ela.
+      for (let i = pedacos.length; i < camadas.length; i++) {
+        camadas[i].style.display = "none";
+      }
     };
 
     const aoRolar = () => {
@@ -203,6 +199,7 @@ export function ChocolateNaTese() {
       window.removeEventListener("scroll", aoRolar);
       window.removeEventListener("resize", aoRolar);
       observador.disconnect();
+      camadas.forEach((el) => el.remove());
     };
   }, [reduzido]);
 
@@ -213,27 +210,11 @@ export function ChocolateNaTese() {
       className="pointer-events-none absolute left-0 top-0 z-20 will-change-transform"
       style={{ opacity: 0, visibility: pronto ? "visible" : "hidden" }}
     >
-      {/* Duas metades, cada uma a sua própria caixa: quebra de barra é corpo
-          rígido, então isto é código puro. A imagem entra depois, cortada em
-          duas com a borda irregular. */}
-      <div className="absolute inset-x-0 top-0 h-1/2 overflow-hidden will-change-transform">
-        {MARCADOR ? (
-          <div className="flex h-full w-full items-end justify-center rounded-t-lg border-2 border-b-0 border-dashed border-verde bg-verde-claro">
-            <span className="pb-1 font-mono text-[10px] text-verde-escuro">
-              metade de cima
-            </span>
-          </div>
-        ) : null}
-      </div>
-      <div className="absolute inset-x-0 bottom-0 h-1/2 overflow-hidden will-change-transform">
-        {MARCADOR ? (
-          <div className="flex h-full w-full items-start justify-center rounded-b-lg border-2 border-t-0 border-dashed border-verde bg-verde-claro">
-            <span className="pt-1 font-mono text-[10px] text-verde-escuro">
-              metade de baixo
-            </span>
-          </div>
-        ) : null}
-      </div>
+      {MARCADOR ? (
+        <div className="flex h-full w-full items-center justify-center rounded-md border-2 border-dashed border-verde bg-verde-claro">
+          <span className="font-mono text-[10px] text-verde-escuro">barra</span>
+        </div>
+      ) : null}
     </div>
   );
 }

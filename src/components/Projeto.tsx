@@ -13,10 +13,18 @@ export function Projeto() {
       className="mx-auto w-full max-w-6xl px-6 py-20 md:py-28"
     >
       <div className="grid gap-14 md:grid-cols-2">
-        {/* `relative` só pra dar âncora à barra de chocolate: ela se posiciona
-            a partir daqui, então acompanha a coluna quando ela gruda no topo,
-            sem ter que perseguir nada. */}
-        <div className="relative md:sticky md:top-28 md:self-start">
+        {/* `relative` dá âncora à barra de chocolate: ela se posiciona a partir
+            daqui, então acompanha a coluna quando ela gruda no topo sem ter que
+            perseguir nada.
+
+            E o `bg-creme` não é decoração — é o que faz o brilho funcionar. O
+            reflexo da barra é pintado em `mix-blend-mode: lighten`, que mistura
+            com o contexto de empilhamento onde está, e `sticky` cria um desses.
+            Sem fundo aqui dentro, o reflexo não teria com o que misturar e
+            apareceria como retângulos coloridos por cima do creme em vez de
+            acender as letras. É a mesma cor do fundo da página, então não muda
+            nada do que se vê. */}
+        <div className="relative bg-creme md:sticky md:top-28 md:self-start">
           <ChocolateNaTese />
           <p className="mb-5 font-mono text-xs uppercase tracking-[0.18em] text-tinta-3">
             O projeto
@@ -32,8 +40,8 @@ export function Projeto() {
               Federal do Espírito Santo, campus Cachoeiro de Itapemirim.
               Estudantes dos cursos de Mecânica e Engenharia Mecânica produzem
               vídeos curtos com experiências científicas curiosas, usando humor,
-              analogias e situações do cotidiano para explicar o que
-              normalmente só aparece em fórmula.
+              analogias e situações do cotidiano para explicar o que normalmente
+              só aparece em fórmula.
             </p>
             <p>
               A ideia que sustenta o projeto é direta:{" "}
