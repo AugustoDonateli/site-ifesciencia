@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Bricolage_Grotesque, Inter } from "next/font/google";
 import { RolagemSuave } from "@/components/RolagemSuave";
+import { enderecoDoSite } from "@/lib/site";
 import "./globals.css";
 
 // Títulos: personalidade.
@@ -17,7 +18,13 @@ const inter = Inter({
   display: "swap",
 });
 
+/**
+ * Cartão de link exige URL absoluta: o WhatsApp busca a imagem a partir do
+ * servidor dele, não do navegador de quem clicou, então caminho relativo não
+ * chega a lugar nenhum. É por isso que existe uma base.
+ */
 export const metadata: Metadata = {
+  metadataBase: new URL(enderecoDoSite),
   title: "Ifesciência",
   description: "Ciência como você nunca viu.",
 };

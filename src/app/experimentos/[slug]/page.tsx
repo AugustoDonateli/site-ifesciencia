@@ -266,18 +266,24 @@ export default async function Ficha({
                 </Secao>
               ) : null}
 
-              {e.pdf_url ? (
-                <div className="border-t border-borda pt-8">
-                  <a
-                    href={e.pdf_url}
-                    target="_blank"
-                    rel="noreferrer"
-                    className="inline-block rounded-full bg-verde px-7 py-3.5 text-sm font-medium text-white transition-colors hover:bg-verde-escuro"
-                  >
-                    Baixar o PDF para imprimir
-                  </a>
-                </div>
-              ) : null}
+              {/* O botão agora aparece SEMPRE, e não só quando alguém subiu um
+                  arquivo à mão. A rota gera a ficha a partir dos campos e só
+                  redireciona pro arquivo enviado quando existe um (D15) — sem
+                  isso, a promessa da chamada final ("um PDF para imprimir")
+                  não valia pra nenhum experimento do site. */}
+              <div className="border-t border-borda pt-8">
+                <a
+                  href={`/experimentos/${e.slug}/pdf`}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="inline-block rounded-full bg-verde px-7 py-3.5 text-sm font-medium text-white transition-colors hover:bg-verde-escuro"
+                >
+                  Baixar o PDF para imprimir
+                </a>
+                <p className="mt-3 font-mono text-xs text-tinta-3">
+                  Uma página, preto e branco, com materiais e passo a passo.
+                </p>
+              </div>
             </div>
           </div>
 
