@@ -4,10 +4,15 @@ import { useEffect, useRef, useState } from "react";
 import { usarMovimentoReduzido } from "@/lib/usarMovimentoReduzido";
 
 /**
- * Enquanto a barra é um marcador, isto fica ligado. Trocar por `false` quando a
- * imagem entrar — o resto do componente não muda.
+ * A imagem sai do gerador com os cantos já arredondados e fundo branco fora
+ * deles. Recortada justo na barra, sobra branco só nos quatro cantos — e este
+ * raio, medido em 6,3% da altura, é o que apara exatamente essa sobra.
+ *
+ * Em porcentagem e não em pixels porque a barra muda de altura com a tela: a
+ * altura dela vem da frase, que quebra em duas linhas no computador e em três
+ * no celular.
  */
-const MARCADOR = true;
+const RAIO_DO_CANTO = 0.063;
 
 /** Quanto scroll a passagem inteira consome, em pixels. */
 const PASSAGEM = 460;
@@ -23,7 +28,7 @@ const MEIO_SOLTA = 0.55;
  * para roxo e âmbar, que é o caminho que um filme de difração faz de verdade.
  */
 const IRIDESCENCIA =
-  "#2f9e44 0%, #2a93a8 28%, #6f5aa0 54%, #b8558a 78%, #b07a2a 100%";
+  "#35c05a 0%, #2fb6d8 28%, #8a6fd8 54%, #e262a4 78%, #e0a338 100%";
 
 /**
  * A barra de chocolate holográfico que passa por cima da tese e a deixa acesa.
@@ -107,12 +112,21 @@ export function ChocolateNaTese() {
 
       palco.style.width = `${largura}px`;
       palco.style.height = `${altura}px`;
+      palco.style.borderRadius = `${altura * RAIO_DO_CANTO}px`;
       palco.style.left = `${r.left - p.left}px`;
       palco.style.top = `${centroY - altura / 2}px`;
 
-      /** Onde a borda esquerda da barra está, para um dado avanço da passagem. */
-      const bordaEm = (q: number) =>
-        r.left + (-largura - 20 + q * (r.width + largura * 2 + 40));
+      /**
+       * A frente de luz é a borda DIREITA da barra, e essa escolha decide onde
+       * ela termina.
+       *
+       * Com a frente na borda esquerda, pra acender a frase até a última letra
+       * a barra tinha que levar o corpo inteiro pra depois dela — e como a
+       * frase acaba a 15px da beirada da coluna, ela ia parar em cima das
+       * fotos e sumia lá, do nada. Com a frente na direita, ela ilumina à
+       * frente de si e acaba o trabalho ainda dentro da coluna.
+       */
+      const bordaEm = (q: number) => r.left - 20 + q * (r.width + 40);
 
       const empilhado = window.matchMedia("(max-width: 767px)").matches;
       const s = secao.getBoundingClientRect();
@@ -139,9 +153,21 @@ export function ChocolateNaTese() {
         const meio = empilhado ? MEIO_SOLTA : MEIO;
         q = (t - (meio - janela / 2)) / janela;
 
-        palco.style.opacity = q >= 0 && q <= 1 ? "1" : "0";
+        /**
+         * Ela acende chegando e se dissipa indo embora, em vez de piscar pra
+         * fora da existência. Sem isso a barra simplesmente deixava de ser
+         * desenhada no fim da janela — que foi o que o Augusto viu.
+         */
+        const aparecer = Math.min(Math.max(q / 0.14, 0), 1);
+        const apagar = 1 - Math.min(Math.max((q - 0.78) / 0.22, 0), 1);
+        palco.style.opacity =
+          q >= 0 && q <= 1 ? String(aparecer * apagar) : "0";
+
         if (q >= 0 && q <= 1) {
-          palco.style.transform = `translateX(${bordaEm(q) - r.left}px)`;
+          // A caixa é ancorada pela ponta esquerda, e a frente é a direita.
+          palco.style.transform = `translateX(${
+            bordaEm(q) - largura - r.left
+          }px)`;
         }
         q = Math.min(Math.max(q, 0), 1);
       }
@@ -207,14 +233,21 @@ export function ChocolateNaTese() {
     <div
       ref={ref}
       aria-hidden="true"
-      className="pointer-events-none absolute left-0 top-0 z-20 will-change-transform"
+      className="pointer-events-none absolute left-0 top-0 z-20 overflow-hidden will-change-transform"
       style={{ opacity: 0, visibility: pronto ? "visible" : "hidden" }}
     >
-      {MARCADOR ? (
-        <div className="flex h-full w-full items-center justify-center rounded-md border-2 border-dashed border-verde bg-verde-claro">
-          <span className="font-mono text-[10px] text-verde-escuro">barra</span>
-        </div>
-      ) : null}
+      {/* Sai já no tamanho e formato de entrega, então não passa pelo
+          otimizador; e carrega junto com a página, porque objeto de rolagem
+          não pode aparecer atrasado — foi o tropeço dos quadros do copo. */}
+      <img
+        src="/objetos/chocolate.webp"
+        alt=""
+        width={420}
+        height={234}
+        loading="eager"
+        decoding="async"
+        className="h-full w-full object-cover"
+      />
     </div>
   );
 }
