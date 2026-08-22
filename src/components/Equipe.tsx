@@ -107,6 +107,7 @@ function Cartao({ nome, curso, ano, foto }: Pessoa) {
 export function Equipe() {
   const secaoRef = useRef<HTMLElement>(null);
   const trilhoRef = useRef<HTMLDivElement>(null);
+  const palcoRef = useRef<HTMLDivElement>(null);
   const cabecalhoRef = useRef<HTMLDivElement>(null);
   const [altura, setAltura] = useState<number | undefined>(undefined);
   const [preso, setPreso] = useState(true);
@@ -160,6 +161,29 @@ export function Equipe() {
 
       setPreso(true);
       setAltura(window.innerHeight + distancia * LENTIDAO);
+
+      /**
+       * O recuo que centraliza sai do cartão MEDIDO, não de uma fórmula.
+       *
+       * Ele já foi `max(5rem, calc((100svh - var(--alt)) / 2))`, e isso estava
+       * errado por duplicar regra: `--alt` deriva de `--larg`, mas no celular o
+       * cartão não usa `--larg` — usa `w-[78vw] max-w-[300px]`. A conta
+       * centralizava um cartão de 109px enquanto o de verdade tinha 293, e
+       * sobravam 306px de creme em cima contra 76 embaixo.
+       *
+       * O piso de 80px continua: o menu tem 69px e gruda no topo junto com o
+       * palco, então sem ele o cartão passaria por baixo numa tela baixa.
+       */
+      const palco = palcoRef.current;
+      const cartao = trilho.firstElementChild as HTMLElement | null;
+      if (palco && cartao) {
+        const alturaDoCartao = cartao.getBoundingClientRect().height;
+        palco.style.paddingTop = `${Math.max(
+          80,
+          (window.innerHeight - alturaDoCartao) / 2,
+        )}px`;
+      }
+
       posicionar();
     };
 
@@ -246,7 +270,6 @@ export function Equipe() {
             height: altura,
             "--larg":
               "min(calc((100vw - 3rem) / 3), calc(46svh - 52px), var(--teto))",
-            "--alt": "calc(var(--larg) * 1.25 + 64px)",
           } as React.CSSProperties
         }
       >
@@ -261,18 +284,12 @@ export function Equipe() {
             tela é baixa. O menu tem 69px e fica grudado no topo junto com o
             palco, então esse piso é o que garante que um não cubra o outro. */}
         <div
+          ref={palcoRef}
           className={`flex overflow-hidden ${
             preso
               ? "sticky top-0 h-screen items-start pb-6"
               : "items-center py-12"
           }`}
-          style={
-            preso
-              ? {
-                  paddingTop: "max(5rem, calc((100svh - var(--alt)) / 2))",
-                }
-              : undefined
-          }
         >
           <div
             ref={trilhoRef}

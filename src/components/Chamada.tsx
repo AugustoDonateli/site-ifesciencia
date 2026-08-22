@@ -129,8 +129,26 @@ export function Chamada() {
        * o texto e o botão.
        */
       const empilhado = window.matchMedia("(max-width: 767px)").matches;
+
+      /**
+       * No celular o copo nasce INTEIRO abaixo do parágrafo.
+       *
+       * A conta anterior colocava a BASE dele 24px abaixo do texto — só que o
+       * corpo tem 150px e sobe a partir da base, então ele nascia atravessando
+       * o parágrafo: medido, 24.859px² de texto coberto no começo da queda. É
+       * a mesma reclamação que o Augusto fez do computador e que foi corrigida
+       * lá movendo o botão pra direita; aqui, empilhado, não existe faixa livre
+       * ao lado, então o jeito é começar mais embaixo.
+       *
+       * `BASE - ALTURA_DO_COPO` é o que sobra de caixa acima do objeto, e é o
+       * que precisa ser descontado pro topo dele, e não a base, encostar no
+       * limite de baixo do texto.
+       */
       const inicioY = empilhado
-        ? paragrafo.offsetTop + paragrafo.offsetHeight - BASE + 24
+        ? paragrafo.offsetTop +
+          paragrafo.offsetHeight +
+          16 -
+          (BASE - ALTURA_DO_COPO)
         : -BASE;
 
       /**
@@ -275,7 +293,7 @@ export function Chamada() {
 
           {/* No celular a coluna vai parar embaixo do texto, então o recuo
                 de cima é o que dá espaço pra queda acontecer sem cruzar nada. */}
-          <div className="mt-56 flex flex-col justify-end md:mt-0 md:min-h-[420px]">
+          <div className="mt-72 flex flex-col justify-end md:mt-0 md:min-h-[420px]">
             <Link
               ref={botaoRef}
               href="/experimentos"
