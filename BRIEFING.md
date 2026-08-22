@@ -859,3 +859,61 @@ quem posiciona o objeto é o bloco de texto. Duas rodadas perdidas nisso.
   altura e pregar a base. Feita na exportação, com `scale`+`pad`+`crop` por
   quadro, sobrou variação de 2px — e aí o componente não precisa de
   `BASE_POR_QUADRO` nenhum.
+
+---
+
+## 18. Param em DOIS objetos icônicos — decisão do Augusto
+
+O plano da seção 14 previa três. Ficaram dois: **o copo** (chamada final) e
+**a bola** (alcance). O terceiro foi procurado e abandonado, e o motivo importa
+mais que a decisão.
+
+### Por que não teve terceiro
+
+**Não sobrou lugar, e isso foi medido, não sentido.** As quatro bordas entre
+seções da home, com a linha no meio da tela:
+
+| borda | elementos visíveis | área ocupada |
+|---|---|---|
+| hero / O projeto | 25 | 757k px² |
+| O projeto / Alcance | 31 | 587k px² |
+| Alcance / imprensa | 30 | 499k px² |
+| A equipe / Para professores | 49 | 2111k px² |
+
+Nenhuma está livre. E as duas menos carregadas encostam nos objetos que já
+existem: a de "O projeto / Alcance" é a pista de voo da bola, e a de baixo tem
+a faixa da imprensa.
+
+O catálogo parece ter espaço — conteúdo acaba em 1134px de 1617 — mas é vazio
+falso: são 3 experimentos de uns 20. Enche sozinho.
+
+### A regra que saiu daqui
+
+**Objeto bom nasce de um lugar que pedia alguma coisa, não de um lugar que
+sobrou.** O botão pedia ser atingido; o número pedia levar um tranco. Quando a
+busca virou "onde eu enfio o terceiro", todas as respostas ficaram forçadas —
+foram cinco propostas recusadas seguidas.
+
+Corolário: **seção nova pra hospedar objeto é a ordem invertida.** Se um dia o
+site ganhar uma seção por motivo editorial de verdade, aí o lugar aparece
+sozinho e o objeto volta à mesa.
+
+### O que fica guardado
+
+- **Chocolate holográfico caindo numa borda de seção e partindo nela**, com a
+  linha divisória fazendo as vezes do sulco da barra. Foi a melhor das ideias
+  recusadas, e o motivo da recusa foi lugar, não mérito.
+- Chocolate partindo é **corpo rígido**: duas metades girando a partir de uma
+  aresta. Isso é código. Custaria 2 créditos numa imagem da barra inteira,
+  cortada em duas no ffmpeg. Vídeo só é necessário quando a forma se deforma ou
+  revela algo escondido — o caso do copo oco.
+- Descartados por motivo técnico, não por gosto: **gelo transparente**
+  (transparência inviabiliza o recorte por cor) e **garrafa de Klein**
+  (o efeito bonito é um laço contínuo, que exigiria presença permanente na
+  página).
+- **Coca Clear está fora em definitivo**: marca registrada, e o Augusto não
+  quer fazer propaganda de graça. Alinhado com o aviso da seção 15.
+
+### Saldo
+
+16 créditos no Higgsfield, intactos. O que falta pro site não é objeto.
