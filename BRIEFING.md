@@ -917,3 +917,27 @@ sozinho e o objeto volta à mesa.
 ### Saldo
 
 16 créditos no Higgsfield, intactos. O que falta pro site não é objeto.
+
+### Ideia guardada: o chocolate na tese (melhor encaixe achado até agora)
+
+A frase em negrito de "O projeto" — *a ciência está presente em diversos
+aspectos da vida diária* — mede 502×44 e fica **cravada na tela**: a coluna de
+texto é `md:sticky md:top-28`, então são as fotos que passam por ela. Alvo
+imóvel, igual ao botão do copo, e por uns 590px de rolagem.
+
+A barra entraria deslizando na horizontal (não caindo, pra não atravessar o
+parágrafo), pousaria sobre a frase e partiria nela, e as duas metades se
+abririam **revelando a frase por baixo**. Chocolate holográfico é chocolate com
+um adesivo prensado: o objeto mais banal possível, com um arco-íris dentro. É a
+tese demonstrada em vez de afirmada.
+
+**A regra que ficou clara nessa caçada:** o objeto tem que SER a ideia da
+seção, não ficar do lado dela. O copo abre em cima do botão que abre o
+catálogo; a bola é literalmente alcance. Trocar o objeto quebraria o sentido.
+Numa linha do tempo o chocolate falharia nesse teste — rima de forma com a
+linha e nada mais, e um lápis segmentado serviria igual. Foi o Augusto quem
+apontou: "ele só existe".
+
+Ainda em aberto: o Augusto quer uma seção nova onde a barra tenha função. O que
+falta pra achar não é ideia minha, é **matéria-prima do projeto** — os vídeos,
+as perguntas que professor faz, o que Fapes e Ifes exigem mostrar.
