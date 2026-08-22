@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import { Bricolage_Grotesque, Inter } from "next/font/google";
 import { RolagemSuave } from "@/components/RolagemSuave";
-import { Claquete } from "@/components/Claquete";
 import { enderecoDoSite } from "@/lib/site";
 import "./globals.css";
 
@@ -38,7 +37,6 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
     >
       <body className="min-h-full flex flex-col">
         <RolagemSuave />
-        <Claquete />
         {children}
       </body>
     </html>

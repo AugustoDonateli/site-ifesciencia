@@ -171,25 +171,3 @@ h3 {
     display: none;
   }
 }
-
-/*
-  As listras da claquete.
-
-  Diagonais alternando creme e as duas cores da marca — é a borda dentada que
-  faz duas barras escuras lerem como claquete. A claquete de vocês tem listra
-  colorida de verdade; aqui ela entra na paleta do site pra não virar arco-íris
-  ao lado de um layout calmo.
-*/
-.listras-da-claquete {
-  background-image: repeating-linear-gradient(
-    -60deg,
-    var(--color-creme) 0 18px,
-    var(--color-tinta) 18px 20px,
-    var(--color-verde) 20px 38px,
-    var(--color-tinta) 38px 40px,
-    var(--color-creme) 40px 58px,
-    var(--color-tinta) 58px 60px,
-    var(--color-tomate) 60px 78px,
-    var(--color-tinta) 78px 80px
-  );
-}
