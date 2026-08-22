@@ -164,10 +164,23 @@ export function ChocolateNaTese() {
           q >= 0 && q <= 1 ? String(aparecer * apagar) : "0";
 
         if (q >= 0 && q <= 1) {
+          /**
+           * O balanço. Reto de ponta a ponta, ela parecia peça deslizando em
+           * trilho — nada no site anda assim.
+           *
+           * Os dois senos usam múltiplos inteiros de π de propósito: assim
+           * começam e terminam em zero, e ela entra e sai nivelada em vez de
+           * cortar o movimento no meio de uma inclinação. Uma volta e meia de
+           * sobe-e-desce, uma de gira, sem coincidirem — se batessem juntas
+           * viraria pulso mecânico.
+           */
+          const sobe = Math.sin(q * Math.PI * 3) * 3.5;
+          const gira = Math.sin(q * Math.PI * 2) * 2.4;
+
           // A caixa é ancorada pela ponta esquerda, e a frente é a direita.
-          palco.style.transform = `translateX(${
+          palco.style.transform = `translate(${
             bordaEm(q) - largura - r.left
-          }px)`;
+          }px, ${sobe}px) rotate(${gira}deg)`;
         }
         q = Math.min(Math.max(q, 0), 1);
       }
@@ -238,12 +251,17 @@ export function ChocolateNaTese() {
     >
       {/* Sai já no tamanho e formato de entrega, então não passa pelo
           otimizador; e carrega junto com a página, porque objeto de rolagem
-          não pode aparecer atrasado — foi o tropeço dos quadros do copo. */}
+          não pode aparecer atrasado — foi o tropeço dos quadros do copo.
+
+          300px pra uma barra exibida a 110: pouco menos de três vezes, e não
+          quatro. Na primeira versão ela saiu nítida e saturada demais, e ao
+          lado de um layout creme e calmo virava adesivo colado de outro lugar.
+          Foi suavizada e dessaturada na exportação junto com isso. */}
       <img
         src="/objetos/chocolate.webp"
         alt=""
-        width={420}
-        height={234}
+        width={300}
+        height={167}
         loading="eager"
         decoding="async"
         className="h-full w-full object-cover"
