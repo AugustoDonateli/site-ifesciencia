@@ -1,4 +1,5 @@
 import { Marcador } from "./Marcador";
+import { ChocolateNaTese } from "./ChocolateNaTese";
 
 /**
  * O que é o Ifesciência. Vem antes de tudo: o site é do projeto,
@@ -12,7 +13,11 @@ export function Projeto() {
       className="mx-auto w-full max-w-6xl px-6 py-20 md:py-28"
     >
       <div className="grid gap-14 md:grid-cols-2">
-        <div className="md:sticky md:top-28 md:self-start">
+        {/* `relative` só pra dar âncora à barra de chocolate: ela se posiciona
+            a partir daqui, então acompanha a coluna quando ela gruda no topo,
+            sem ter que perseguir nada. */}
+        <div className="relative md:sticky md:top-28 md:self-start">
+          <ChocolateNaTese />
           <p className="mb-5 font-mono text-xs uppercase tracking-[0.18em] text-tinta-3">
             O projeto
           </p>
@@ -32,7 +37,7 @@ export function Projeto() {
             </p>
             <p>
               A ideia que sustenta o projeto é direta:{" "}
-              <strong className="font-semibold text-tinta">
+              <strong data-tese className="font-semibold text-tinta">
                 a ciência está presente em diversos aspectos da vida diária
               </strong>{" "}
               — e quase nunca é apresentada desse jeito. O objetivo é
