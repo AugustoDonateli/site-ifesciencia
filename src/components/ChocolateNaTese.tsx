@@ -97,13 +97,21 @@ export function ChocolateNaTese() {
       const p = base.getBoundingClientRect();
 
       /**
-       * A barra cobre a frase e sobra um pouco pros lados, senão ela fica
-       * rente demais e não lê como objeto pousado em cima de alguma coisa.
-       * A altura sai da largura pra barra não distorcer: proporção de barra
-       * deitada, umas seis divisões por duas.
+       * A barra cobre a FRASE e nada além dela.
+       *
+       * A altura sai da altura da frase, não da largura da barra. Tirando da
+       * largura, a proporção de barra de chocolate dava 158px em cima de uma
+       * frase de 44 — 114px de texto vizinho tapado à toa, e o parágrafo
+       * inteiro virava ilegível na passagem.
+       *
+       * O efeito colateral é que a barra muda de formato com a tela, e isso
+       * está certo: no computador a frase cabe em duas linhas e sai uma barra
+       * comprida e fina; no celular ela quebra em três ou quatro e sai uma
+       * barra encorpada. Nos dois casos ela cobre exatamente o que vai
+       * revelar, que é o ponto.
        */
       const largura = r.width + 24;
-      const altura = Math.round(largura * 0.3);
+      const altura = Math.round(r.height + 16);
       const centroX = r.left - p.left + r.width / 2;
       const centroY = r.top - p.top + r.height / 2;
 
