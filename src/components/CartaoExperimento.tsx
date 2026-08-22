@@ -6,7 +6,7 @@ import {
   capaDoExperimento,
   formatarCusto,
 } from "@/lib/tipos";
-import type { Area, Dificuldade } from "@/lib/tipos";
+import type { Area, Dificuldade, Nivel } from "@/lib/tipos";
 
 export type ItemCatalogo = {
   id: string;
@@ -14,6 +14,8 @@ export type ItemCatalogo = {
   titulo: string;
   gancho: string | null;
   area: Area;
+  /** A consulta do catálogo já trazia isto; faltava o filtro usar. */
+  nivel: Nivel;
   capa_url: string | null;
   tempo_execucao_min: number | null;
   custo_centavos: number | null;

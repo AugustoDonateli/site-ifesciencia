@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { Menu } from "@/components/Menu";
 import { RodapeDoSite } from "@/components/RodapeDoSite";
-import { CatalogoLista } from "@/components/CatalogoLista";
+import { CatalogoLista, type Filtros } from "@/components/CatalogoLista";
 import type { ItemCatalogo } from "@/components/CartaoExperimento";
 import { listarExperimentos } from "@/lib/supabase";
 import type { Area } from "@/lib/tipos";
@@ -16,15 +16,28 @@ export const metadata: Metadata = {
 // sem precisar de um novo deploy.
 export const revalidate = 60;
 
+/**
+ * Os filtros vêm do endereço, e não só de um estado no navegador.
+ *
+ * É o que faz um link filtrado servir: a professora manda "os de química que
+ * dão pra fazer em casa" no grupo da escola e quem abre já cai na lista certa,
+ * sem precisar refazer os cliques.
+ */
 export default async function Experimentos({
   searchParams,
 }: {
-  searchParams: Promise<{ area?: string }>;
+  searchParams: Promise<{ area?: string; nivel?: string; casa?: string }>;
 }) {
-  const { area } = await searchParams;
-  const areaInicial = ["fisica", "quimica", "biologia"].includes(area ?? "")
-    ? (area as Area)
-    : null;
+  const { area, nivel, casa } = await searchParams;
+  const filtrosIniciais: Filtros = {
+    area: ["fisica", "quimica", "biologia"].includes(area ?? "")
+      ? (area as Area)
+      : null,
+    nivel: ["fundamental", "medio"].includes(nivel ?? "")
+      ? (nivel as Filtros["nivel"])
+      : null,
+    soCasa: casa === "1",
+  };
 
   // Se o banco não responder, a página ainda abre — só sem lista.
   // Um catálogo vazio é ruim; a página inteira fora do ar é pior.
@@ -55,7 +68,7 @@ export default async function Experimentos({
 
           <CatalogoLista
             experimentos={experimentos}
-            areaInicial={areaInicial}
+            filtrosIniciais={filtrosIniciais}
           />
         </main>
       </div>
